@@ -4,11 +4,15 @@
 /* Classes */
 const Game = require('./game.js');
 const Player = require('./player.js');
+const Road = require('./road.js');
+const MiniCar = require('./minicar.js');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
-var player = new Player({x: 0, y: 240})
+var player = new Player({ x: 0, y: 240 })
+var road = new Road({ x: 100, y: 0 });
+var minicar = new MiniCar({ x: 100, y: 500 });
 
 /**
  * @function masterLoop
@@ -31,7 +35,8 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-  player.update(elapsedTime);
+    player.update(elapsedTime);
+    minicar.update(elapsedTime);
   // TODO: Update the game objects
 }
 
@@ -45,10 +50,12 @@ function update(elapsedTime) {
 function render(elapsedTime, ctx) {
   ctx.fillStyle = "lightblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  road.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
+  minicar.render(elapsedTime, ctx);
 }
 
-},{"./game.js":2,"./player.js":3}],2:[function(require,module,exports){
+},{"./game.js":2,"./minicar.js":3,"./player.js":4,"./road.js":5}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -109,6 +116,75 @@ Game.prototype.loop = function(newTime) {
 },{}],3:[function(require,module,exports){
 "use strict";
 
+const MS_PER_FRAME = 1000 / 8;
+
+/**
+ * @module exports the Player class
+ */
+module.exports = exports = MiniCar;
+
+/**
+ * @constructor Player
+ * Creates a new player object
+ * @param {Postition} position object specifying an x and y
+ */
+function MiniCar(position) {
+    this.state = "driving";
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 200;
+    this.height = 270;
+    this.spritesheet = new Image();
+    this.spritesheet.src = encodeURI('assets/cars_mini.svg');
+    this.timer = 0;
+    this.frame = 0;
+}
+
+
+
+/**
+ * @function updates the player object
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ */
+MiniCar.prototype.update = function (time) {
+    switch (this.state) {
+        case "driving":
+            this.timer += time;
+            this.y -= 2;
+            /*
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
+            }
+            */
+            break;
+    }
+}
+
+/**
+ * @function renders the player into the provided context
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ * {CanvasRenderingContext2D} ctx the context to render into
+ */
+MiniCar.prototype.render = function (time, ctx) {
+    switch (this.state) {
+        case "driving":
+            ctx.drawImage(
+              // image
+              this.spritesheet,
+              // source rectangle
+              this.frame * 64, 64, this.width, this.height,
+              // destination rectangle
+              this.x, this.y, this.width/2, this.height/2
+          );
+            break;
+    }
+}
+
+},{}],4:[function(require,module,exports){
+"use strict";
+
 const MS_PER_FRAME = 1000/8;
 
 /**
@@ -131,93 +207,89 @@ function Player(position) {
   this.spritesheet.src = encodeURI('assets/PlayerSprite2.png');
   this.timer = 0;
   this.frame = 0;
+
+  var self = this;
+
+  window.onkeydown = function (event) {
+      switch (event.keyCode) {
+          // UP
+          case 38:
+          case 87:
+              self.state = "up";
+              break;
+          // LEFT
+          case 37:
+          case 65:
+
+              break;
+          // RIGHT    
+          case 39:
+          case 68:
+              self.state = "hopping";
+              break;
+          //DOWN
+          case 40:
+          case 83:
+              self.state = "down"
+              break;
+
+      }
+  }
 }
 
-var self = this;
 
-window.onkeydown = function (event) {
-    switch (event.keyCode) {
-        // UP
-        case 38:
-        case 87:
-            //input.up = true;
-            //y -= 1;
-            break;
-        // LEFT
-        case 37:
-        case 65:
-            //input.left = true;
-            //x -= 1;
-            self.state = "hopping";
-            break;
-        // RIGHT    
-        case 39:
-        case 68:
-            //input.right = true;
-            //x += 1;
-            break;
-        //DOWN
-        case 40:
-        case 83:
-            //input.down = true;
-            //y += 1;
-            break;
-
-    }
-}
-
-window.onkeyup = function (event) {
-    switch (event.keyCode) {
-        // UP
-        case 38:
-        case 87:
-            //input.up = true;
-            //y -= 1;
-            break;
-            // LEFT
-        case 37:
-        case 65:
-            //input.left = true;
-            //x -= 1;
-            //self.state = "idle";
-            break;
-            // RIGHT    
-        case 39:
-        case 68:
-            //input.right = true;
-            //x += 1;
-            break;
-            //DOWN
-        case 40:
-        case 83:
-            //input.down = true;
-            //y += 1;
-            break;
-
-    }
-}
 
 /**
  * @function updates the player object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Player.prototype.update = function(time) {
-  switch(this.state) {
-    case "idle":
-      this.timer += time;
-      if(this.timer > MS_PER_FRAME) {
-        this.timer = 0;
-        this.frame += 1;
-        if(this.frame > 3) this.frame = 0;
-      }
-      break;
-      case "hopping":
-          this.timer += time;
-          self.x += 13;
-          if(timer > MS_PER_FRAME){
-              this.timer = 0;
-              //self.state = "idle";
-          }
+Player.prototype.update = function (time) {
+    switch (this.state) {
+        case "idle":
+            this.timer += time;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
+            }
+            break;
+        case "hopping":
+            console.log("hopping case");
+            this.timer += time;
+            this.x += 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) {
+                    this.frame = 0;
+                    this.state = "idle";
+                }
+            }
+            break;
+        case "up":
+            this.timer += time;
+            this.y -= 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) {
+                    this.frame = 0;
+                    this.state = "idle";
+                }
+            }
+            break;
+        case "down":
+            this.timer += time;
+            this.y += 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) {
+                    this.frame = 0;
+                    this.state = "idle";
+                }
+            }
+            break;
 
     // TODO: Implement your player's update by state
   }
@@ -231,27 +303,81 @@ Player.prototype.update = function(time) {
 Player.prototype.render = function(time, ctx) {
   switch(this.state) {
     case "idle":
-      ctx.drawImage(
-        // image
-        this.spritesheet,
-        // source rectangle
-        this.frame * 64, 64, this.width, this.height,
-        // destination rectangle
-        this.x, this.y, this.width, this.height
+        ctx.drawImage(
+          // image
+          this.spritesheet,
+          // source rectangle
+          this.frame * 64, 64, this.width, this.height,
+          // destination rectangle
+          this.x, this.y, this.width, this.height
       );
+      console.log("idle x: " + this.x);
       break;
       case "hopping":
           ctx.drawImage(
               //image
               this.spritesheet,
               // source rectangle
-              this.frame * 64, 64, this.width, this.height,
+              this.frame * 64, 64, this.width, this.height-128,
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
+          console.log("hopping x: " + this.x);
+          break;
+      case "up":
+          ctx.drawImage(
+             //image
+             this.spritesheet,
+             // source rectangle
+             this.frame * 64, 64, this.width, this.height,
+             // destination rectangle
+             this.x, this.y, this.width, this.height
+         );
+          //console.log("hopping x: " + this.x);
+          break;
+      case "down":
+          ctx.drawImage(
+             //image
+             this.spritesheet,
+             // source rectangle
+             this.frame * 64, 64, this.width, this.height,
+             // destination rectangle
+             this.x, this.y, this.width, this.height
+         );
+          //console.log("hopping x: " + this.x);
           break;
     // TODO: Implement your player's redering according to state
   }
+}
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+/**
+ * @module exports the Player class
+ */
+module.exports = exports = Road;
+
+function Road(position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 100;
+    this.height = 500;
+    this.spritesheet = new Image();
+    this.spritesheet.src = encodeURI('assets/road.png');
+}
+
+Road.prototype.render = function (time, ctx) {
+
+    ctx.drawImage(
+        //image
+        this.spritesheet,
+        // source rectangle
+        //this.frame * 64, 64, this.width, this.height,
+        //this.width, this.height
+        // destination rectangle
+        this.x, this.y, this.width, this.height
+    );
 }
 
 },{}]},{},[1]);
