@@ -5,6 +5,7 @@ const Game = require('./game.js');
 const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
+const River = require('./river.js');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -12,6 +13,7 @@ var game = new Game(canvas, update, render);
 var player = new Player({ x: 0, y: 240 })
 var road = new Road({ x: 100, y: 0 });
 var minicar = new MiniCar({ x: 100, y: 500 });
+var river = new River({ x: 300, y: 0 });
 
 /**
  * @function masterLoop
@@ -50,6 +52,7 @@ function render(elapsedTime, ctx) {
   ctx.fillStyle = "lightblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   road.render(elapsedTime, ctx);
+  river.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
 }

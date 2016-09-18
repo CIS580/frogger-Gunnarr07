@@ -3,15 +3,15 @@
 /**
  * @module exports the Player class
  */
-module.exports = exports = Road;
+module.exports = exports = River;
 
-function Road(position) {
+function River(position) {
     this.x = position.x;
     this.y = position.y;
-    this.width = 100;
+    this.width = 64;
     this.height = 500;
     this.spritesheet = new Image();
-    this.spritesheet.src = encodeURI('assets/road.png');
+    this.spritesheet.src = encodeURI('assets/river.png');
 }
 
 River.prototype.render = function (time, ctx) {

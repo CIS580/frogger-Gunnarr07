@@ -6,6 +6,7 @@ const Game = require('./game.js');
 const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
+const River = require('./river.js');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -13,6 +14,7 @@ var game = new Game(canvas, update, render);
 var player = new Player({ x: 0, y: 240 })
 var road = new Road({ x: 100, y: 0 });
 var minicar = new MiniCar({ x: 100, y: 500 });
+var river = new River({ x: 300, y: 0 });
 
 /**
  * @function masterLoop
@@ -51,11 +53,12 @@ function render(elapsedTime, ctx) {
   ctx.fillStyle = "lightblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   road.render(elapsedTime, ctx);
+  river.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
 }
 
-},{"./game.js":2,"./minicar.js":3,"./player.js":4,"./road.js":5}],2:[function(require,module,exports){
+},{"./game.js":2,"./minicar.js":3,"./player.js":4,"./river.js":5,"./road.js":6}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -351,6 +354,36 @@ Player.prototype.render = function(time, ctx) {
 }
 
 },{}],5:[function(require,module,exports){
+"use strict";
+
+/**
+ * @module exports the Player class
+ */
+module.exports = exports = River;
+
+function River(position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 64;
+    this.height = 500;
+    this.spritesheet = new Image();
+    this.spritesheet.src = encodeURI('assets/river.png');
+}
+
+River.prototype.render = function (time, ctx) {
+
+    ctx.drawImage(
+        //image
+        this.spritesheet,
+        // source rectangle
+        //this.frame * 64, 64, this.width, this.height,
+        //this.width, this.height
+        // destination rectangle
+        this.x, this.y, this.width, this.height
+    );
+}
+
+},{}],6:[function(require,module,exports){
 "use strict";
 
 /**
