@@ -13,11 +13,11 @@ module.exports = exports = Log;
  * @param {Postition} position object specifying an x and y
  */
 function Log(position) {
-    this.state = "driving";
+    this.state = "moving";
     this.x = position.x;
     this.y = position.y;
-    this.width = 200;
-    this.height = 270;
+    this.width = 64;
+    this.height = 128;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/log.png');
     this.timer = 0;
@@ -32,16 +32,14 @@ function Log(position) {
  */
 Log.prototype.update = function (time) {
     switch (this.state) {
-        case "driving":
+        case "moving":
             this.timer += time;
             this.y -= 2;
-            /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
                 if (this.frame > 3) this.frame = 0;
             }
-            */
             break;
     }
 }
@@ -53,14 +51,14 @@ Log.prototype.update = function (time) {
  */
 Log.prototype.render = function (time, ctx) {
     switch (this.state) {
-        case "driving":
+        case "moving":
             ctx.drawImage(
               // image
               this.spritesheet,
               // source rectangle
               this.frame * 64, 64, this.width, this.height,
               // destination rectangle
-              this.x, this.y, this.width / 2, this.height / 2
+              this.x, this.y, this.width, this.height
           );
             break;
     }

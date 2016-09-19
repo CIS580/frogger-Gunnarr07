@@ -7,6 +7,7 @@ const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
 const River = require('./river.js');
+const Log = require('./log.js');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -15,6 +16,7 @@ var player = new Player({ x: 0, y: 240 })
 var road = new Road({ x: 100, y: 0 });
 var minicar = new MiniCar({ x: 100, y: 500 });
 var river = new River({ x: 300, y: 0 });
+var log = new Log({x: 300, y: 500})
 
 /**
  * @function masterLoop
@@ -39,6 +41,7 @@ masterLoop(performance.now());
 function update(elapsedTime) {
     player.update(elapsedTime);
     minicar.update(elapsedTime);
+    log.update(elapsedTime);
   // TODO: Update the game objects
 }
 
@@ -54,11 +57,12 @@ function render(elapsedTime, ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   road.render(elapsedTime, ctx);
   river.render(elapsedTime, ctx);
+  log.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
 }
 
-},{"./game.js":2,"./minicar.js":3,"./player.js":4,"./river.js":5,"./road.js":6}],2:[function(require,module,exports){
+},{"./game.js":2,"./log.js":3,"./minicar.js":4,"./player.js":5,"./river.js":6,"./road.js":7}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -117,6 +121,73 @@ Game.prototype.loop = function(newTime) {
 }
 
 },{}],3:[function(require,module,exports){
+"use strict";
+
+const MS_PER_FRAME = 1000 / 8;
+
+/**
+ * @module exports the Player class
+ */
+module.exports = exports = Log;
+
+/**
+ * @constructor Player
+ * Creates a new player object
+ * @param {Postition} position object specifying an x and y
+ */
+function Log(position) {
+    this.state = "moving";
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 64;
+    this.height = 128;
+    this.spritesheet = new Image();
+    this.spritesheet.src = encodeURI('assets/log.png');
+    this.timer = 0;
+    this.frame = 0;
+}
+
+
+
+/**
+ * @function updates the player object
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ */
+Log.prototype.update = function (time) {
+    switch (this.state) {
+        case "moving":
+            this.timer += time;
+            this.y -= 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
+            }
+            break;
+    }
+}
+
+/**
+ * @function renders the player into the provided context
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ * {CanvasRenderingContext2D} ctx the context to render into
+ */
+Log.prototype.render = function (time, ctx) {
+    switch (this.state) {
+        case "moving":
+            ctx.drawImage(
+              // image
+              this.spritesheet,
+              // source rectangle
+              this.frame * 64, 64, this.width, this.height,
+              // destination rectangle
+              this.x, this.y, this.width, this.height
+          );
+            break;
+    }
+}
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -185,7 +256,7 @@ MiniCar.prototype.render = function (time, ctx) {
     }
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
@@ -353,7 +424,7 @@ Player.prototype.render = function(time, ctx) {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 /**
@@ -383,7 +454,7 @@ River.prototype.render = function (time, ctx) {
     );
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 /**

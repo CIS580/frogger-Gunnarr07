@@ -6,6 +6,7 @@ const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
 const River = require('./river.js');
+const Log = require('./log.js');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -14,6 +15,7 @@ var player = new Player({ x: 0, y: 240 })
 var road = new Road({ x: 100, y: 0 });
 var minicar = new MiniCar({ x: 100, y: 500 });
 var river = new River({ x: 300, y: 0 });
+var log = new Log({x: 300, y: 500})
 
 /**
  * @function masterLoop
@@ -38,6 +40,7 @@ masterLoop(performance.now());
 function update(elapsedTime) {
     player.update(elapsedTime);
     minicar.update(elapsedTime);
+    log.update(elapsedTime);
   // TODO: Update the game objects
 }
 
@@ -53,6 +56,7 @@ function render(elapsedTime, ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   road.render(elapsedTime, ctx);
   river.render(elapsedTime, ctx);
+  log.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
 }
