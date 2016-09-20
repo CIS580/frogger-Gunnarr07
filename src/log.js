@@ -34,12 +34,15 @@ Log.prototype.update = function (time) {
     switch (this.state) {
         case "moving":
             this.timer += time;
-            this.y -= 2;
+            this.y -= 1;
+            if (this.y < -this.height) this.y = 480;
+            /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
                 if (this.frame > 3) this.frame = 0;
             }
+            */
             break;
     }
 }

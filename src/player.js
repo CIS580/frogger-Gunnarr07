@@ -26,6 +26,9 @@ function Player(position) {
   var self = this;
 
   window.onkeydown = function (event) {
+      // stop default scrolling with arrows
+      event.preventDefault();
+
       switch (event.keyCode) {
           // UP
           case 38:
@@ -58,7 +61,9 @@ function Player(position) {
  * @function updates the player object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Player.prototype.update = function (time) {
+Player.prototype.update = function (time, state) {
+    if (state == "ridingLog") this.state = state;
+
     switch (this.state) {
         case "idle":
             this.timer += time;
@@ -84,6 +89,7 @@ Player.prototype.update = function (time) {
         case "up":
             this.timer += time;
             this.y -= 2;
+
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -103,6 +109,15 @@ Player.prototype.update = function (time) {
                     this.frame = 0;
                     this.state = "idle";
                 }
+            }
+            break;
+        case "ridingLog":
+            this.timer += time;
+            this.y -= 1;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
             }
             break;
 
@@ -126,7 +141,6 @@ Player.prototype.render = function(time, ctx) {
           // destination rectangle
           this.x, this.y, this.width, this.height
       );
-      console.log("idle x: " + this.x);
       break;
       case "hopping":
           ctx.drawImage(
@@ -137,7 +151,6 @@ Player.prototype.render = function(time, ctx) {
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
-          console.log("hopping x: " + this.x);
           break;
       case "up":
           ctx.drawImage(
@@ -161,6 +174,19 @@ Player.prototype.render = function(time, ctx) {
          );
           //console.log("hopping x: " + this.x);
           break;
-    // TODO: Implement your player's redering according to state
+      case "ridingLog":
+          ctx.drawImage(
+             //image
+             this.spritesheet,
+             // source rectangle
+             this.frame * 64, 64, this.width, this.height,
+             // destination rectangle
+             this.x, this.y, this.width, this.height
+         );
+          //console.log("hopping x: " + this.x);
+          break;
+          // TODO: Implement your player's redering according to state
   }
+  ctx.strokeStyle = this.color;
+  ctx.strokeRect(this.x, this.y, this.width, this.height);
 }

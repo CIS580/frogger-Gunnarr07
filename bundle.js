@@ -13,7 +13,9 @@ const Log = require('./log.js');
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
-var entities = new EntityManager(canvas.width, canvas.height, 128);
+var entities = new EntityManager(canvas.width, canvas.height, 64);
+var paused = false;
+var idRestart = document.getElementById('id_restart');
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -21,14 +23,35 @@ entities.addEntity(player);
 
 // create game objects
 var road1 = new Road({ x: 100, y: 0 });
+//var road1 = new Road({ x: 128, y: 0 });
+
 var road2 = new Road({ x: 450, y: 0 });
-//var minicar = new MiniCar({ x: 100, y: 500 });
 var minicar = new MiniCar({ x: 100, y: canvas.height });
+//var minicar = new MiniCar({ x: 135, y: canvas.height });
+
 entities.addEntity(minicar);
 
 var river1 = new River({ x: 300, y: 0 });
+entities.addEntity(river1);
 var river2 = new River({ x: 640, y: 0 });
-var log = new Log({x: 300, y: 500})
+entities.addEntity(river2);
+var log = new Log({ x: 300, y: canvas.height })
+entities.addEntity(log);
+
+/*
+window.onkeydown = function (event) {
+    switch (event.keyCode) {
+        case 27:
+            if (paused) {
+                paused = false;
+            }
+            else {
+                paused = true;
+            }
+            break;
+    }
+}
+*/
 
 /**
  * @function masterLoop
@@ -51,10 +74,57 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-    player.update(elapsedTime);
-    minicar.update(elapsedTime);
-    log.update(elapsedTime);
-  // TODO: Update the game objects
+    if (!paused) {
+        player.update(elapsedTime);
+        entities.updateEntity(player);
+        minicar.update(elapsedTime);
+        entities.updateEntity(minicar);
+        log.update(elapsedTime);
+        entities.updateEntity(log);
+        entities.updateEntity(river1);
+        // TODO: Update the game objects
+        /*
+        entities.collide(function (entity1, entity2) {
+            entity1.color = '#ff0000';
+            entity2.color = '#00ff00';
+        });
+        */
+        entities.collide(function (entity1, entity2) {
+            if (entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) {
+                entity1.color = '#ff0000';
+                entity2.color = '#00ff00';
+                console.log("collision car and player");
+                console.log(entity1);
+                console.log(entity2);
+                paused = true;
+                idRestart.style.display = "block";
+                document.getElementById('id_button').onclick = function () {
+                    location.reload();
+                }
+            }
+            if (entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player) {
+                entity1.color = '#ff0000';
+                entity2.color = '#00ff00';
+                console.log("collision river and player");
+                console.log(entity1);
+                console.log(entity2);
+                paused = true;
+                idRestart.style.display = "block";
+                document.getElementById('id_button').onclick = function () {
+                    location.reload();
+                }
+            }
+            if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+                entity1.color = '#ff0000';
+                entity2.color = '#00ff00';
+                console.log("collision log and player");
+                console.log(entity1);
+                console.log(entity2);
+                //player.update(elapsedTime, "ridingLog");
+            }
+        });
+    }
+
 }
 
 /**
@@ -71,6 +141,7 @@ function render(elapsedTime, ctx) {
   road2.render(elapsedTime, ctx);
   river1.render(elapsedTime, ctx);
   river2.render(elapsedTime, ctx);
+  entities.renderCells(ctx);
   log.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
@@ -272,12 +343,15 @@ Log.prototype.update = function (time) {
     switch (this.state) {
         case "moving":
             this.timer += time;
-            this.y -= 2;
+            this.y -= 1;
+            if (this.y < -this.height) this.y = 480;
+            /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
                 if (this.frame > 3) this.frame = 0;
             }
+            */
             break;
     }
 }
@@ -368,6 +442,8 @@ MiniCar.prototype.render = function (time, ctx) {
               // destination rectangle
               this.x, this.y, this.width/2, this.height/2
           );
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(this.x, this.y, this.width/2, this.height/2);
             break;
     }
 }
@@ -401,6 +477,9 @@ function Player(position) {
   var self = this;
 
   window.onkeydown = function (event) {
+      // stop default scrolling with arrows
+      event.preventDefault();
+
       switch (event.keyCode) {
           // UP
           case 38:
@@ -433,7 +512,9 @@ function Player(position) {
  * @function updates the player object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Player.prototype.update = function (time) {
+Player.prototype.update = function (time, state) {
+    if (state == "ridingLog") this.state = state;
+
     switch (this.state) {
         case "idle":
             this.timer += time;
@@ -459,6 +540,7 @@ Player.prototype.update = function (time) {
         case "up":
             this.timer += time;
             this.y -= 2;
+
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -478,6 +560,15 @@ Player.prototype.update = function (time) {
                     this.frame = 0;
                     this.state = "idle";
                 }
+            }
+            break;
+        case "ridingLog":
+            this.timer += time;
+            this.y -= 1;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
             }
             break;
 
@@ -501,7 +592,6 @@ Player.prototype.render = function(time, ctx) {
           // destination rectangle
           this.x, this.y, this.width, this.height
       );
-      console.log("idle x: " + this.x);
       break;
       case "hopping":
           ctx.drawImage(
@@ -512,7 +602,6 @@ Player.prototype.render = function(time, ctx) {
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
-          console.log("hopping x: " + this.x);
           break;
       case "up":
           ctx.drawImage(
@@ -536,8 +625,21 @@ Player.prototype.render = function(time, ctx) {
          );
           //console.log("hopping x: " + this.x);
           break;
-    // TODO: Implement your player's redering according to state
+      case "ridingLog":
+          ctx.drawImage(
+             //image
+             this.spritesheet,
+             // source rectangle
+             this.frame * 64, 64, this.width, this.height,
+             // destination rectangle
+             this.x, this.y, this.width, this.height
+         );
+          //console.log("hopping x: " + this.x);
+          break;
+          // TODO: Implement your player's redering according to state
   }
+  ctx.strokeStyle = this.color;
+  ctx.strokeRect(this.x, this.y, this.width, this.height);
 }
 
 },{}],7:[function(require,module,exports){
@@ -552,7 +654,7 @@ function River(position) {
     this.x = position.x;
     this.y = position.y;
     this.width = 64;
-    this.height = 500;
+    this.height = 480;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/river.png');
 }
@@ -581,8 +683,8 @@ module.exports = exports = Road;
 function Road(position) {
     this.x = position.x;
     this.y = position.y;
-    this.width = 100;
-    this.height = 500;
+    this.width = 100
+    this.height = 480;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/road.png');
 }

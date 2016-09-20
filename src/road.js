@@ -8,8 +8,8 @@ module.exports = exports = Road;
 function Road(position) {
     this.x = position.x;
     this.y = position.y;
-    this.width = 100;
-    this.height = 500;
+    this.width = 100
+    this.height = 480;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/road.png');
 }

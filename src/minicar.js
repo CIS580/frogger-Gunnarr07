@@ -63,6 +63,8 @@ MiniCar.prototype.render = function (time, ctx) {
               // destination rectangle
               this.x, this.y, this.width/2, this.height/2
           );
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(this.x, this.y, this.width/2, this.height/2);
             break;
     }
 }
