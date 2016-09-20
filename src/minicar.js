@@ -35,6 +35,7 @@ MiniCar.prototype.update = function (time) {
         case "driving":
             this.timer += time;
             this.y -= 2;
+            if (this.y < -this.height) this.y = 480;
             /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;

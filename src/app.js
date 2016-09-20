@@ -2,6 +2,7 @@
 
 /* Classes */
 const Game = require('./game.js');
+const EntityManager = require('./entity-manager');
 const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
@@ -11,10 +12,21 @@ const Log = require('./log.js');
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
+var entities = new EntityManager(canvas.width, canvas.height, 128);
+
+// The player as a frog
 var player = new Player({ x: 0, y: 240 })
-var road = new Road({ x: 100, y: 0 });
-var minicar = new MiniCar({ x: 100, y: 500 });
-var river = new River({ x: 300, y: 0 });
+entities.addEntity(player);
+
+// create game objects
+var road1 = new Road({ x: 100, y: 0 });
+var road2 = new Road({ x: 450, y: 0 });
+//var minicar = new MiniCar({ x: 100, y: 500 });
+var minicar = new MiniCar({ x: 100, y: canvas.height });
+entities.addEntity(minicar);
+
+var river1 = new River({ x: 300, y: 0 });
+var river2 = new River({ x: 640, y: 0 });
 var log = new Log({x: 300, y: 500})
 
 /**
@@ -54,8 +66,10 @@ function update(elapsedTime) {
 function render(elapsedTime, ctx) {
   ctx.fillStyle = "lightblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  road.render(elapsedTime, ctx);
-  river.render(elapsedTime, ctx);
+  road1.render(elapsedTime, ctx);
+  road2.render(elapsedTime, ctx);
+  river1.render(elapsedTime, ctx);
+  river2.render(elapsedTime, ctx);
   log.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
