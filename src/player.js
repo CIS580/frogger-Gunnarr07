@@ -74,7 +74,6 @@ Player.prototype.update = function (time, state) {
             }
             break;
         case "hopping":
-            console.log("hopping case");
             this.timer += time;
             this.x += 2;
             if (this.timer > MS_PER_FRAME) {
@@ -111,7 +110,6 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
-            /*
         case "ridingLog":
             this.timer += time;
             this.y -= 1;
@@ -121,7 +119,7 @@ Player.prototype.update = function (time, state) {
                 if (this.frame > 3) this.frame = 0;
             }
             break;
-            */
+            
     // TODO: Implement your player's update by state
   }
 }

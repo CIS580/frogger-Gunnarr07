@@ -19,6 +19,8 @@ var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
 var level = 1;
+var removeRiver = [];
+
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -36,7 +38,7 @@ var racecar = new RaceCar({ x: 450, y: canvas.height });
 entities.addEntity(racecar);
 
 
-/*
+
 var rivers1 = [];
 for (var i = 0; i < 8; i++){
     var river = new River({
@@ -46,7 +48,7 @@ for (var i = 0; i < 8; i++){
     rivers1.push(river);
     entities.addEntity(river);
 }
-*/
+
 
 //var river1 = new River({ x: 300, y: 0 });
 //entities.addEntity(river1);
@@ -91,6 +93,22 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
+    /*
+    while (removeRiver.length != 0) {
+        entities.addEntity(removeRiver.pop());
+    }
+    */
+    
+    for (var i = 0; i < removeRiver.length; i++) {
+        entities.addEntity(removeRiver.pop());
+        //console.log(removeRiver.pop());
+    }
+    
+    /*
+    removeRiver.forEach(function (remove) {
+        entities.addEntity(remove.pop());
+    });
+    */
     player.update(elapsedTime);
     entities.updateEntity(player);
     minicar.update(elapsedTime);
@@ -99,6 +117,7 @@ function update(elapsedTime) {
     entities.updateEntity(racecar);
     log.update(elapsedTime);
     entities.updateEntity(log);
+    
     //entities.updateEntity(river1);
     // TODO: Update the game objects
     /*
@@ -125,8 +144,8 @@ function update(elapsedTime) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision car and player");
-            console.log(entity1);
-            console.log(entity2);
+            //console.log(entity1);
+            //console.log(entity2);
             player.x = 0;
             player.y = 240;
             lives--;
@@ -140,30 +159,40 @@ function update(elapsedTime) {
             }
         }
         else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
-                
+            
+            if (entity1 instanceof River) {
+                removeRiver.push(entity1);
+                entities.removeEntity(entity1);
+            }
+            else if (entity2 instanceof River) {
+                removeRiver.push(entity2);
+                entities.removeEntity(entity2);
+            }
+            
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
-            console.log("collision river and log");
+            //console.log("collision river and log");
             /*
             console.log(entity1);
             console.log(entity2);
             */
-            //player.update(elapsedTime, "ridingLog");
         }
         else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision log and player");
-            console.log(entity1);
-            console.log(entity2);
+            //console.log(entity1);
+            //console.log(entity2);
+            //game.paused = true;
             //player.update(elapsedTime, "ridingLog");
         }
         else if ((entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player)) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision river and player");
-            console.log(entity1);
-            console.log(entity2);
+            //game.paused = true;
+            //console.log(entity1);
+            //console.log(entity2);
             //idRestart.style.display = "block";
             //document.getElementById('id_button').onclick = function () {
             //    location.reload();
@@ -186,11 +215,11 @@ function render(elapsedTime, ctx) {
   road1.render(elapsedTime, ctx);
   road2.render(elapsedTime, ctx);
     //river1.render(elapsedTime, ctx);
-    /*
+    
   rivers1.forEach(function (river) {
       river.render(elapsedTime, ctx);
   });
-  */
+  
   river2.render(elapsedTime, ctx);
   entities.renderCells(ctx);
   log.render(elapsedTime, ctx);
@@ -581,7 +610,6 @@ Player.prototype.update = function (time, state) {
             }
             break;
         case "hopping":
-            console.log("hopping case");
             this.timer += time;
             this.x += 2;
             if (this.timer > MS_PER_FRAME) {
@@ -618,7 +646,6 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
-            /*
         case "ridingLog":
             this.timer += time;
             this.y -= 1;
@@ -628,7 +655,7 @@ Player.prototype.update = function (time, state) {
                 if (this.frame > 3) this.frame = 0;
             }
             break;
-            */
+            
     // TODO: Implement your player's update by state
   }
 }
