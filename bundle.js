@@ -17,7 +17,7 @@ var entities = new EntityManager(canvas.width, canvas.height, 64);
 var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
-var idScore = document.getElementById('id_scroe');
+//var idScore = document.getElementById('id_scroe');
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -87,81 +87,80 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-    if (!game.paused) {
-        player.update(elapsedTime);
-        entities.updateEntity(player);
-        minicar.update(elapsedTime);
-        entities.updateEntity(minicar);
-        log.update(elapsedTime);
-        entities.updateEntity(log);
-        //entities.updateEntity(river1);
-        // TODO: Update the game objects
-        /*
-        entities.collide(function (entity1, entity2) {
+    player.update(elapsedTime);
+    entities.updateEntity(player);
+    minicar.update(elapsedTime);
+    entities.updateEntity(minicar);
+    log.update(elapsedTime);
+    entities.updateEntity(log);
+    //entities.updateEntity(river1);
+    // TODO: Update the game objects
+    /*
+    entities.collide(function (entity1, entity2) {
+        entity1.color = '#ff0000';
+        entity2.color = '#00ff00';
+    });
+    */
+
+    if (player.x >= canvas.width) {
+        score += 100;
+        game.idScore.innerHTML = "Score: " + score;
+        player.x = 0;
+        player.y = 240;
+        minicar.speed++;
+        log.speed++;
+    }
+
+    entities.collide(function (entity1, entity2) {
+        if (entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
-        });
-        */
-
-        if (player.x >= canvas.width) {
-            score += 100;
-            //idScore.innerHTML = "Score: " + score;
+            console.log("collision car and player");
+            console.log(entity1);
+            console.log(entity2);
             player.x = 0;
             player.y = 240;
-            minicar.speed++;
-            log.speed++;
-        }
-
-        entities.collide(function (entity1, entity2) {
-            if (entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) {
-                entity1.color = '#ff0000';
-                entity2.color = '#00ff00';
-                console.log("collision car and player");
-                console.log(entity1);
-                console.log(entity2);
-                player.x = 0;
-                player.y = 240;
-                lives--;
-                if (lives == 0) {
-                    game.paused = true;
-                    idRestart.style.display = "block";
-                    document.getElementById('id_button').onclick = function () {
-                        location.reload();
-                    }
+            lives--;
+            game.idLives.innerHTML = "Lives: " + lives;
+            if (lives == 0) {
+                game.paused = true;
+                idRestart.style.display = "block";
+                document.getElementById('id_button').onclick = function () {
+                    location.reload();
                 }
             }
-            else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
+        }
+        else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
                 
-                entity1.color = '#ff0000';
-                entity2.color = '#00ff00';
-                console.log("collision river and log");
-                /*
-                console.log(entity1);
-                console.log(entity2);
-                */
-                //player.update(elapsedTime, "ridingLog");
-            }
-            else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
-                entity1.color = '#ff0000';
-                entity2.color = '#00ff00';
-                console.log("collision log and player");
-                console.log(entity1);
-                console.log(entity2);
-                //player.update(elapsedTime, "ridingLog");
-            }
-            else if ((entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player)) {
-                entity1.color = '#ff0000';
-                entity2.color = '#00ff00';
-                console.log("collision river and player");
-                console.log(entity1);
-                console.log(entity2);
-                //idRestart.style.display = "block";
-                //document.getElementById('id_button').onclick = function () {
-                //    location.reload();
-               // }
-            }
-        });
-    }
+            entity1.color = '#ff0000';
+            entity2.color = '#00ff00';
+            console.log("collision river and log");
+            /*
+            console.log(entity1);
+            console.log(entity2);
+            */
+            //player.update(elapsedTime, "ridingLog");
+        }
+        else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+            entity1.color = '#ff0000';
+            entity2.color = '#00ff00';
+            console.log("collision log and player");
+            console.log(entity1);
+            console.log(entity2);
+            //player.update(elapsedTime, "ridingLog");
+        }
+        else if ((entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player)) {
+            entity1.color = '#ff0000';
+            entity2.color = '#00ff00';
+            console.log("collision river and player");
+            console.log(entity1);
+            console.log(entity2);
+            //idRestart.style.display = "block";
+            //document.getElementById('id_button').onclick = function () {
+            //    location.reload();
+            // }
+        }
+    });
 
 }
 
@@ -321,6 +320,8 @@ function Game(screen, updateFunction, renderFunction) {
   // Start the game loop
   this.oldTime = performance.now();
   this.paused = false;
+  this.idScore = document.getElementById('id_score');
+  this.idLives = document.getElementById('id_lives');
 }
 
 /**
