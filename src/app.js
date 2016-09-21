@@ -118,7 +118,9 @@ function update(elapsedTime) {
     }
 
     entities.collide(function (entity1, entity2) {
-        if (entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) {
+        if ((entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) ||
+            (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
+
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision car and player");
