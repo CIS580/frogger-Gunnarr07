@@ -18,7 +18,6 @@ var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
 var level = 1;
-//var idScore = document.getElementById('id_scroe');
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -114,6 +113,7 @@ function update(elapsedTime) {
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
         minicar.speed++;
+        racecar.speed++;
         log.speed++;
     }
 
