@@ -15,6 +15,7 @@ const Log = require('./log.js');
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
 var entities = new EntityManager(canvas.width, canvas.height, 64);
+//var entities = new EntityManager(canvas.width, canvas.height, 128);
 var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
@@ -168,7 +169,6 @@ function update(elapsedTime) {
                 removeRiver.push(entity2);
                 entities.removeEntity(entity2);
             }
-            
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             //console.log("collision river and log");
@@ -181,6 +181,9 @@ function update(elapsedTime) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision log and player");
+            //game.paused = true;
+            player.x = log.x + 65;
+            player.y = log.y + 65;
             //console.log(entity1);
             //console.log(entity2);
             //game.paused = true;
@@ -190,6 +193,17 @@ function update(elapsedTime) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision river and player");
+            player.x = 0;
+            player.y = 240;
+            lives--;
+            game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+            if (lives == 0) {
+                game.paused = true;
+                idRestart.style.display = "block";
+                document.getElementById('id_button').onclick = function () {
+                    location.reload();
+                }
+            }
             //game.paused = true;
             //console.log(entity1);
             //console.log(entity2);
