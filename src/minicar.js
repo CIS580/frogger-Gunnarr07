@@ -22,6 +22,7 @@ function MiniCar(position) {
     this.spritesheet.src = encodeURI('assets/cars_mini.svg');
     this.timer = 0;
     this.frame = 0;
+    this.speed = 1;
 }
 
 
@@ -34,7 +35,7 @@ MiniCar.prototype.update = function (time) {
     switch (this.state) {
         case "driving":
             this.timer += time;
-            this.y -= 2;
+            this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
             /*
             if (this.timer > MS_PER_FRAME) {

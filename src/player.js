@@ -101,7 +101,7 @@ Player.prototype.update = function (time, state) {
             break;
         case "down":
             this.timer += time;
-            this.y += 2;
+            this.y += 5;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -111,6 +111,7 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
+            /*
         case "ridingLog":
             this.timer += time;
             this.y -= 1;
@@ -120,7 +121,7 @@ Player.prototype.update = function (time, state) {
                 if (this.frame > 3) this.frame = 0;
             }
             break;
-
+            */
     // TODO: Implement your player's update by state
   }
 }

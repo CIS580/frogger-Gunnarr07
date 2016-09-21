@@ -10,6 +10,7 @@ function River(position) {
     this.y = position.y;
     this.width = 64;
     this.height = 480;
+    //this.height = 64;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/river.png');
 }

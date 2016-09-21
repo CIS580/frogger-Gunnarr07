@@ -14,8 +14,10 @@ const Log = require('./log.js');
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
 var entities = new EntityManager(canvas.width, canvas.height, 64);
-var paused = false;
 var idRestart = document.getElementById('id_restart');
+var score = 0;
+var lives = 3;
+var idScore = document.getElementById('id_scroe');
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -28,11 +30,22 @@ var road1 = new Road({ x: 100, y: 0 });
 var road2 = new Road({ x: 450, y: 0 });
 var minicar = new MiniCar({ x: 100, y: canvas.height });
 //var minicar = new MiniCar({ x: 135, y: canvas.height });
-
 entities.addEntity(minicar);
 
-var river1 = new River({ x: 300, y: 0 });
-entities.addEntity(river1);
+/*
+var rivers1 = [];
+for (var i = 0; i < 8; i++){
+    var river = new River({
+        x: 300,
+        y: i * 64,
+    });
+    rivers1.push(river);
+    entities.addEntity(river);
+}
+*/
+
+//var river1 = new River({ x: 300, y: 0 });
+//entities.addEntity(river1);
 var river2 = new River({ x: 640, y: 0 });
 entities.addEntity(river2);
 var log = new Log({ x: 300, y: canvas.height })
@@ -74,14 +87,14 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-    if (!paused) {
+    if (!game.paused) {
         player.update(elapsedTime);
         entities.updateEntity(player);
         minicar.update(elapsedTime);
         entities.updateEntity(minicar);
         log.update(elapsedTime);
         entities.updateEntity(log);
-        entities.updateEntity(river1);
+        //entities.updateEntity(river1);
         // TODO: Update the game objects
         /*
         entities.collide(function (entity1, entity2) {
@@ -89,6 +102,16 @@ function update(elapsedTime) {
             entity2.color = '#00ff00';
         });
         */
+
+        if (player.x >= canvas.width) {
+            score += 100;
+            //idScore.innerHTML = "Score: " + score;
+            player.x = 0;
+            player.y = 240;
+            minicar.speed++;
+            log.speed++;
+        }
+
         entities.collide(function (entity1, entity2) {
             if (entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) {
                 entity1.color = '#ff0000';
@@ -96,31 +119,46 @@ function update(elapsedTime) {
                 console.log("collision car and player");
                 console.log(entity1);
                 console.log(entity2);
-                paused = true;
-                idRestart.style.display = "block";
-                document.getElementById('id_button').onclick = function () {
-                    location.reload();
+                player.x = 0;
+                player.y = 240;
+                lives--;
+                if (lives == 0) {
+                    game.paused = true;
+                    idRestart.style.display = "block";
+                    document.getElementById('id_button').onclick = function () {
+                        location.reload();
+                    }
                 }
             }
-            if (entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player) {
+            else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
+                
                 entity1.color = '#ff0000';
                 entity2.color = '#00ff00';
-                console.log("collision river and player");
+                console.log("collision river and log");
+                /*
                 console.log(entity1);
                 console.log(entity2);
-                paused = true;
-                idRestart.style.display = "block";
-                document.getElementById('id_button').onclick = function () {
-                    location.reload();
-                }
+                */
+                //player.update(elapsedTime, "ridingLog");
             }
-            if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+            else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
                 entity1.color = '#ff0000';
                 entity2.color = '#00ff00';
                 console.log("collision log and player");
                 console.log(entity1);
                 console.log(entity2);
                 //player.update(elapsedTime, "ridingLog");
+            }
+            else if ((entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player)) {
+                entity1.color = '#ff0000';
+                entity2.color = '#00ff00';
+                console.log("collision river and player");
+                console.log(entity1);
+                console.log(entity2);
+                //idRestart.style.display = "block";
+                //document.getElementById('id_button').onclick = function () {
+                //    location.reload();
+               // }
             }
         });
     }
@@ -139,7 +177,12 @@ function render(elapsedTime, ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   road1.render(elapsedTime, ctx);
   road2.render(elapsedTime, ctx);
-  river1.render(elapsedTime, ctx);
+    //river1.render(elapsedTime, ctx);
+    /*
+  rivers1.forEach(function (river) {
+      river.render(elapsedTime, ctx);
+  });
+  */
   river2.render(elapsedTime, ctx);
   entities.renderCells(ctx);
   log.render(elapsedTime, ctx);
@@ -327,10 +370,12 @@ function Log(position) {
     this.y = position.y;
     this.width = 64;
     this.height = 128;
+    //this.height = 64;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/log.png');
     this.timer = 0;
     this.frame = 0;
+    this.speed = 1;
 }
 
 
@@ -343,7 +388,7 @@ Log.prototype.update = function (time) {
     switch (this.state) {
         case "moving":
             this.timer += time;
-            this.y -= 1;
+            this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
             /*
             if (this.timer > MS_PER_FRAME) {
@@ -401,6 +446,7 @@ function MiniCar(position) {
     this.spritesheet.src = encodeURI('assets/cars_mini.svg');
     this.timer = 0;
     this.frame = 0;
+    this.speed = 1;
 }
 
 
@@ -413,7 +459,7 @@ MiniCar.prototype.update = function (time) {
     switch (this.state) {
         case "driving":
             this.timer += time;
-            this.y -= 2;
+            this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
             /*
             if (this.timer > MS_PER_FRAME) {
@@ -552,7 +598,7 @@ Player.prototype.update = function (time, state) {
             break;
         case "down":
             this.timer += time;
-            this.y += 2;
+            this.y += 5;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -562,6 +608,7 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
+            /*
         case "ridingLog":
             this.timer += time;
             this.y -= 1;
@@ -571,7 +618,7 @@ Player.prototype.update = function (time, state) {
                 if (this.frame > 3) this.frame = 0;
             }
             break;
-
+            */
     // TODO: Implement your player's update by state
   }
 }
@@ -655,6 +702,7 @@ function River(position) {
     this.y = position.y;
     this.width = 64;
     this.height = 480;
+    //this.height = 64;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/river.png');
 }

@@ -18,10 +18,12 @@ function Log(position) {
     this.y = position.y;
     this.width = 64;
     this.height = 128;
+    //this.height = 64;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/log.png');
     this.timer = 0;
     this.frame = 0;
+    this.speed = 1;
 }
 
 
@@ -34,7 +36,7 @@ Log.prototype.update = function (time) {
     switch (this.state) {
         case "moving":
             this.timer += time;
-            this.y -= 1;
+            this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
             /*
             if (this.timer > MS_PER_FRAME) {
