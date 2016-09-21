@@ -6,6 +6,7 @@ const EntityManager = require('./entity-manager');
 const Player = require('./player.js');
 const Road = require('./road.js');
 const MiniCar = require('./minicar.js');
+const RaceCar = require('./race-car.js');
 const River = require('./river.js');
 const Log = require('./log.js');
 
@@ -26,11 +27,14 @@ entities.addEntity(player);
 // create game objects
 var road1 = new Road({ x: 100, y: 0 });
 //var road1 = new Road({ x: 128, y: 0 });
-
-var road2 = new Road({ x: 450, y: 0 });
 var minicar = new MiniCar({ x: 100, y: canvas.height });
 //var minicar = new MiniCar({ x: 135, y: canvas.height });
 entities.addEntity(minicar);
+
+var road2 = new Road({ x: 450, y: 0 });
+var racecar = new RaceCar({ x: 450, y: canvas.height });
+entities.addEntity(racecar);
+
 
 /*
 var rivers1 = [];
@@ -91,6 +95,8 @@ function update(elapsedTime) {
     entities.updateEntity(player);
     minicar.update(elapsedTime);
     entities.updateEntity(minicar);
+    racecar.update(elapsedTime);
+    entities.updateEntity(racecar);
     log.update(elapsedTime);
     entities.updateEntity(log);
     //entities.updateEntity(river1);
@@ -187,4 +193,5 @@ function render(elapsedTime, ctx) {
   log.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
   minicar.render(elapsedTime, ctx);
+  racecar.render(elapsedTime, ctx);
 }
