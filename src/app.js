@@ -16,6 +16,7 @@ var entities = new EntityManager(canvas.width, canvas.height, 64);
 var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
+var level = 1;
 //var idScore = document.getElementById('id_scroe');
 
 // The player as a frog
@@ -103,8 +104,8 @@ function update(elapsedTime) {
 
     if (player.x >= canvas.width) {
         score += 100;
-        game.idScore.innerHTML = "Score: " + score;
-        player.x = 0;
+        level++;
+        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
         minicar.speed++;
         log.speed++;
@@ -120,7 +121,7 @@ function update(elapsedTime) {
             player.x = 0;
             player.y = 240;
             lives--;
-            game.idLives.innerHTML = "Lives: " + lives;
+            game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
             if (lives == 0) {
                 game.paused = true;
                 idRestart.style.display = "block";

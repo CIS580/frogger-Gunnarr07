@@ -101,7 +101,7 @@ Player.prototype.update = function (time, state) {
             break;
         case "down":
             this.timer += time;
-            this.y += 5;
+            this.y += 1;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
