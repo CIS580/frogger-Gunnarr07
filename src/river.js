@@ -15,6 +15,32 @@ function River(position) {
     this.spritesheet.src = encodeURI('assets/river.png');
 }
 
+/**
+ * @function updates the player object
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ */
+River.prototype.update = function (time) {
+    this.y -= this.speed;
+    if (this.y < -this.height) this.y = 480;
+
+    /*
+    switch (this.state) {
+        case "driving":
+            this.timer += time;
+            this.y -= this.speed;
+            if (this.y < -this.height) this.y = 480;
+            
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
+            }
+            
+            break;
+    }
+    */
+}
+
 River.prototype.render = function (time, ctx) {
 
     ctx.drawImage(

@@ -5,6 +5,7 @@ const Game = require('./game.js');
 const EntityManager = require('./entity-manager');
 const Player = require('./player.js');
 const Road = require('./road.js');
+const TruckUp = require('./truck-up.js');
 const MiniCar = require('./minicar.js');
 const RaceCar = require('./race-car.js');
 const River = require('./river.js');
@@ -29,10 +30,14 @@ entities.addEntity(player);
 // create game objects
 var road1 = new Road({ x: 100, y: 0 });
 //var road1 = new Road({ x: 128, y: 0 });
+
+var truckup = new TruckUp({ x: 100, y: canvas.height });
+entities.addEntity(truckup);
+/*
 var minicar = new MiniCar({ x: 100, y: canvas.height });
 //var minicar = new MiniCar({ x: 135, y: canvas.height });
 entities.addEntity(minicar);
-
+*/
 var road2 = new Road({ x: 450, y: 0 });
 var racecar = new RaceCar({ x: 450, y: canvas.height });
 entities.addEntity(racecar);
@@ -40,7 +45,7 @@ entities.addEntity(racecar);
 
 
 var rivers1 = [];
-for (var i = 0; i < 8; i++){
+for (var i = 0; i < 1; i++){
     var river = new River({
         x: 300,
         y: i * 64,
@@ -48,14 +53,17 @@ for (var i = 0; i < 8; i++){
     rivers1.push(river);
     entities.addEntity(river);
 }
+var log1 = new Log({ x: 300, y: 256 });
+entities.addEntity(log1);
+
 
 
 //var river1 = new River({ x: 300, y: 0 });
 //entities.addEntity(river1);
 var river2 = new River({ x: 640, y: 0 });
 entities.addEntity(river2);
-var log = new Log({ x: 300, y: canvas.height })
-entities.addEntity(log);
+var log2 = new Log({ x: 300, y: canvas.height })
+entities.addEntity(log2);
 
 /*
 window.onkeydown = function (event) {
@@ -98,12 +106,12 @@ function update(elapsedTime) {
         entities.addEntity(removeRiver.pop());
     }
     */
-    
+    /*
     for (var i = 0; i < removeRiver.length; i++) {
         entities.addEntity(removeRiver.pop());
         //console.log(removeRiver.pop());
     }
-    
+    */
     /*
     removeRiver.forEach(function (remove) {
         entities.addEntity(remove.pop());
@@ -111,12 +119,18 @@ function update(elapsedTime) {
     */
     player.update(elapsedTime);
     entities.updateEntity(player);
+    truckup.update(elapsedTime);
+    entities.updateEntity(truckup);
+    /*
     minicar.update(elapsedTime);
     entities.updateEntity(minicar);
+    */
     racecar.update(elapsedTime);
     entities.updateEntity(racecar);
-    log.update(elapsedTime);
-    entities.updateEntity(log);
+    log1.update(elapsedTime);
+    entities.updateEntity(log1);
+    log2.update(elapsedTime);
+    entities.updateEntity(log2);
     
     //entities.updateEntity(river1);
     // TODO: Update the game objects
@@ -132,13 +146,18 @@ function update(elapsedTime) {
         level++;
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
-        minicar.speed++;
+        truckup.speed++;
         racecar.speed++;
-        log.speed++;
+        rivers1.forEach(function (river) {
+            river.speed++;
+        });
+        log1.speed++;
+        log2.speed++;
+
     }
 
     entities.collide(function (entity1, entity2) {
-        if ((entity1 instanceof Player && entity2 instanceof MiniCar || entity1 instanceof MiniCar && entity2 instanceof Player) ||
+        if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
             (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
 
             entity1.color = '#ff0000';
@@ -159,7 +178,7 @@ function update(elapsedTime) {
             }
         }
         else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
-            
+            /*
             if (entity1 instanceof River) {
                 removeRiver.push(entity1);
                 entities.removeEntity(entity1);
@@ -168,6 +187,7 @@ function update(elapsedTime) {
                 removeRiver.push(entity2);
                 entities.removeEntity(entity2);
             }
+            */
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             //console.log("collision river and log");
@@ -181,8 +201,10 @@ function update(elapsedTime) {
             entity2.color = '#00ff00';
             console.log("collision log and player");
             //game.paused = true;
+            /*
             player.x = log.x + 65;
             player.y = log.y + 65;
+            */
             //console.log(entity1);
             //console.log(entity2);
             //game.paused = true;
@@ -235,8 +257,10 @@ function render(elapsedTime, ctx) {
   
   river2.render(elapsedTime, ctx);
   entities.renderCells(ctx);
-  log.render(elapsedTime, ctx);
+  log1.render(elapsedTime, ctx);
+  log2.render(elapsedTime, ctx);
   player.render(elapsedTime, ctx);
-  minicar.render(elapsedTime, ctx);
+    //minicar.render(elapsedTime, ctx);
+  truckup.render(elapsedTime, ctx);
   racecar.render(elapsedTime, ctx);
 }
