@@ -157,22 +157,21 @@ function update(elapsedTime) {
         //log2.speed++;
 
     }
-
-
-    entities.collide(function (entity1, entity2) {
-        if (player.x + 64 >= river1.x) {
-            player.x = 0;
-            player.y = 240;
-            lives--;
-            game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
-            if (lives == 0) {
-                game.paused = true;
-                idRestart.style.display = "block";
-                document.getElementById('id_button').onclick = function () {
-                    location.reload();
-                }
+    if (player.x + 64 >= river1.x) {
+        player.x = 0;
+        player.y = 240;
+        lives--;
+        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+        if (lives == 0) {
+            game.paused = true;
+            idRestart.style.display = "block";
+            document.getElementById('id_button').onclick = function () {
+                location.reload();
             }
         }
+    }
+
+    entities.collide(function (entity1, entity2) {
         if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
             (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
 
@@ -782,8 +781,10 @@ Player.prototype.render = function(time, ctx) {
           break;
           // TODO: Implement your player's redering according to state
   }
+    /*
   ctx.strokeStyle = this.color;
   ctx.strokeRect(this.x, this.y, this.width, this.height);
+  */
 }
 
 },{}],7:[function(require,module,exports){
@@ -1000,7 +1001,7 @@ TruckUp.prototype.update = function (time) {
 }
 
 /**
- * @function renders the player into the provided context
+ * @function renders the truck into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */

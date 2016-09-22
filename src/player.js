@@ -186,6 +186,8 @@ Player.prototype.render = function(time, ctx) {
           break;
           // TODO: Implement your player's redering according to state
   }
+    /*
   ctx.strokeStyle = this.color;
   ctx.strokeRect(this.x, this.y, this.width, this.height);
+  */
 }

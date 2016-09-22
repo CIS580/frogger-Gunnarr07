@@ -49,7 +49,7 @@ TruckUp.prototype.update = function (time) {
 }
 
 /**
- * @function renders the player into the provided context
+ * @function renders the truck into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
