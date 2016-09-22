@@ -42,10 +42,9 @@ var road2 = new Road({ x: 450, y: 0 });
 var racecar = new RaceCar({ x: 450, y: canvas.height });
 entities.addEntity(racecar);
 
-
-
+/*
 var rivers1 = [];
-for (var i = 0; i < 1; i++){
+for (var i = 0; i < 5; i++){
     var river = new River({
         x: 300,
         y: i * 64,
@@ -53,17 +52,21 @@ for (var i = 0; i < 1; i++){
     rivers1.push(river);
     entities.addEntity(river);
 }
-var log1 = new Log({ x: 300, y: 256 });
+*/
+
+
+
+
+
+var river1 = new River({ x: 300, y: 0 });
+
+var log1 = new Log({ x: 300, y: 264 });
 entities.addEntity(log1);
 
-
-
-//var river1 = new River({ x: 300, y: 0 });
-//entities.addEntity(river1);
 var river2 = new River({ x: 640, y: 0 });
 entities.addEntity(river2);
-var log2 = new Log({ x: 300, y: canvas.height })
-entities.addEntity(log2);
+//var log2 = new Log({ x: 300, y: canvas.height })
+//entities.addEntity(log2);
 
 /*
 window.onkeydown = function (event) {
@@ -119,27 +122,28 @@ function update(elapsedTime) {
     */
     player.update(elapsedTime);
     entities.updateEntity(player);
+
     truckup.update(elapsedTime);
     entities.updateEntity(truckup);
-    /*
-    minicar.update(elapsedTime);
-    entities.updateEntity(minicar);
-    */
+
     racecar.update(elapsedTime);
     entities.updateEntity(racecar);
-    log1.update(elapsedTime);
-    entities.updateEntity(log1);
-    log2.update(elapsedTime);
-    entities.updateEntity(log2);
-    
+
+    //river1.update(elapsedTime);
     //entities.updateEntity(river1);
-    // TODO: Update the game objects
+
+    log1.update(elapsedTime);
+    //entities.updateEntity(log1);
+    //log2.update(elapsedTime);
+    //entities.updateEntity(log2);
     /*
-    entities.collide(function (entity1, entity2) {
-        entity1.color = '#ff0000';
-        entity2.color = '#00ff00';
+    rivers1.forEach(function (river) {
+        river.update(elapsedTime);
+        //entities.updateEntity(river);
     });
     */
+
+    // TODO: Update the game objects
 
     if (player.x >= canvas.width) {
         score += 100;
@@ -148,12 +152,22 @@ function update(elapsedTime) {
         player.y = 240;
         truckup.speed++;
         racecar.speed++;
-        rivers1.forEach(function (river) {
-            river.speed++;
-        });
         log1.speed++;
-        log2.speed++;
+        //log2.speed++;
 
+    }
+    if (player.x + 64 >= river1.x) {
+        player.x = 0;
+        player.y = 240;
+        lives--;
+        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+        if (lives == 0) {
+            game.paused = true;
+            idRestart.style.display = "block";
+            document.getElementById('id_button').onclick = function () {
+                location.reload();
+            }
+        }
     }
 
     entities.collide(function (entity1, entity2) {
@@ -196,24 +210,9 @@ function update(elapsedTime) {
             console.log(entity2);
             */
         }
-        else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
-            entity1.color = '#ff0000';
-            entity2.color = '#00ff00';
-            console.log("collision log and player");
-            //game.paused = true;
+        else if ((player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Player && entity2 instanceof Log) ||
+            (player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Log && entity2 instanceof Player)) {
             /*
-            player.x = log.x + 65;
-            player.y = log.y + 65;
-            */
-            //console.log(entity1);
-            //console.log(entity2);
-            //game.paused = true;
-            //player.update(elapsedTime, "ridingLog");
-        }
-        else if ((entity1 instanceof Player && entity2 instanceof River || entity1 instanceof River && entity2 instanceof Player)) {
-            entity1.color = '#ff0000';
-            entity2.color = '#00ff00';
-            console.log("collision river and player");
             player.x = 0;
             player.y = 240;
             lives--;
@@ -225,14 +224,36 @@ function update(elapsedTime) {
                     location.reload();
                 }
             }
-            //game.paused = true;
-            //console.log(entity1);
-            //console.log(entity2);
-            //idRestart.style.display = "block";
-            //document.getElementById('id_button').onclick = function () {
-            //    location.reload();
-            // }
+            */
+        //    if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+        //        entity1.color = '#ff0000';
+        //        entity2.color = '#00ff00';
+        //        console.log("collision log and player");
+        //        //game.paused = true;
+        //        /*
+        //        player.x = log.x + 65;
+        //        player.y = log.y + 65;
+        //        */
+        //        //console.log(entity1);
+        //        //console.log(entity2);
+        //        //game.paused = true;
+        //        //player.update(elapsedTime, "ridingLog");
+        //    }
+        //    else {
+        //        player.x = 0;
+        //        player.y = 240;
+        //        lives--;
+        //        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+        //        if (lives == 0) {
+        //            game.paused = true;
+        //            idRestart.style.display = "block";
+        //            document.getElementById('id_button').onclick = function () {
+        //                location.reload();
+        //            }
+        //        }
+        //    }
         }
+
     });
 
 }
@@ -245,22 +266,22 @@ function update(elapsedTime) {
   * @param {CanvasRenderingContext2D} ctx the context to render to
   */
 function render(elapsedTime, ctx) {
-  ctx.fillStyle = "lightblue";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  road1.render(elapsedTime, ctx);
-  road2.render(elapsedTime, ctx);
-    //river1.render(elapsedTime, ctx);
-    
-  rivers1.forEach(function (river) {
-      river.render(elapsedTime, ctx);
-  });
-  
-  river2.render(elapsedTime, ctx);
-  entities.renderCells(ctx);
-  log1.render(elapsedTime, ctx);
-  log2.render(elapsedTime, ctx);
-  player.render(elapsedTime, ctx);
+    ctx.fillStyle = '#005C09';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    road1.render(elapsedTime, ctx);
+    road2.render(elapsedTime, ctx);
+    river1.render(elapsedTime, ctx);
+    /*
+    rivers1.forEach(function (river) {
+        river.render(elapsedTime, ctx);
+    });
+    */
+    river2.render(elapsedTime, ctx);
+    entities.renderCells(ctx);
+    log1.render(elapsedTime, ctx);
+    //log2.render(elapsedTime, ctx);
+    player.render(elapsedTime, ctx);
     //minicar.render(elapsedTime, ctx);
-  truckup.render(elapsedTime, ctx);
-  racecar.render(elapsedTime, ctx);
+    truckup.render(elapsedTime, ctx);
+    racecar.render(elapsedTime, ctx);
 }
