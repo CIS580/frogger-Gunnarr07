@@ -35,8 +35,8 @@ TruckUp.prototype.update = function (time) {
     switch (this.state) {
         case "driving":
             this.timer += time;
-            this.y -= this.speed;
-            if (this.y < -this.height) this.y = 480;
+            this.y += this.speed;
+            if (this.y < -this.height) this.y = 0;
             /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;

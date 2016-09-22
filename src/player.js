@@ -22,37 +22,6 @@ function Player(position) {
   this.spritesheet.src = encodeURI('assets/PlayerSprite2.png');
   this.timer = 0;
   this.frame = 0;
-
-  var self = this;
-
-  window.onkeydown = function (event) {
-      // stop default scrolling with arrows
-      event.preventDefault();
-
-      switch (event.keyCode) {
-          // UP
-          case 38:
-          case 87:
-              self.state = "up";
-              break;
-          // LEFT
-          case 37:
-          case 65:
-
-              break;
-          // RIGHT    
-          case 39:
-          case 68:
-              self.state = "hopping";
-              break;
-          //DOWN
-          case 40:
-          case 83:
-              self.state = "down"
-              break;
-
-      }
-  }
 }
 
 
@@ -61,9 +30,7 @@ function Player(position) {
  * @function updates the player object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Player.prototype.update = function (time, state) {
-    if (state == "ridingLog") this.state = state;
-
+Player.prototype.update = function (time) {
     switch (this.state) {
         case "idle":
             this.timer += time;
@@ -73,7 +40,31 @@ Player.prototype.update = function (time, state) {
                 if (this.frame > 3) this.frame = 0;
             }
             break;
-        case "hopping":
+        case "hopping-up":
+            this.timer += time;
+            this.y -= 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) {
+                    this.frame = 0;
+                    this.state = "idle";
+                }
+            }
+            break;
+        case "hopping-left":
+            this.timer += time;
+            this.y += 2;
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) {
+                    this.frame = 0;
+                    this.state = "idle";
+                }
+            }
+            break;
+        case "hopping-right":
             this.timer += time;
             this.x += 2;
             if (this.timer > MS_PER_FRAME) {
@@ -85,10 +76,9 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
-        case "up":
+        case "hopping-down":
             this.timer += time;
-            this.y -= 2;
-
+            this.y += 2;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -98,28 +88,6 @@ Player.prototype.update = function (time, state) {
                 }
             }
             break;
-        case "down":
-            this.timer += time;
-            this.y += 1;
-            if (this.timer > MS_PER_FRAME) {
-                this.timer = 0;
-                this.frame += 1;
-                if (this.frame > 3) {
-                    this.frame = 0;
-                    this.state = "idle";
-                }
-            }
-            break;
-        case "ridingLog":
-            this.timer += time;
-            this.y -= 1;
-            if (this.timer > MS_PER_FRAME) {
-                this.timer = 0;
-                this.frame += 1;
-                if (this.frame > 3) this.frame = 0;
-            }
-            break;
-            
     // TODO: Implement your player's update by state
   }
 }
@@ -140,8 +108,18 @@ Player.prototype.render = function(time, ctx) {
           // destination rectangle
           this.x, this.y, this.width, this.height
       );
-      break;
-      case "hopping":
+        break;
+      case "hopping-up":
+          ctx.drawImage(
+             //image
+             this.spritesheet,
+             // source rectangle
+             this.frame * 64, 64, this.width, this.height-128,
+             // destination rectangle
+             this.x, this.y, this.width, this.height
+         );
+          break;
+      case "hopping-right":
           ctx.drawImage(
               //image
               this.spritesheet,
@@ -151,38 +129,25 @@ Player.prototype.render = function(time, ctx) {
               this.x, this.y, this.width, this.height
           );
           break;
-      case "up":
+      case "hopping-left":
           ctx.drawImage(
              //image
              this.spritesheet,
              // source rectangle
-             this.frame * 64, 64, this.width, this.height,
+             this.frame * 64, 64, this.width, this.height-128,
              // destination rectangle
              this.x, this.y, this.width, this.height
          );
-          //console.log("hopping x: " + this.x);
           break;
-      case "down":
+      case "hopping-down":
           ctx.drawImage(
              //image
              this.spritesheet,
              // source rectangle
-             this.frame * 64, 64, this.width, this.height,
+             this.frame * 64, 64, this.width, this.height-128,
              // destination rectangle
              this.x, this.y, this.width, this.height
          );
-          //console.log("hopping x: " + this.x);
-          break;
-      case "ridingLog":
-          ctx.drawImage(
-             //image
-             this.spritesheet,
-             // source rectangle
-             this.frame * 64, 64, this.width, this.height,
-             // destination rectangle
-             this.x, this.y, this.width, this.height
-         );
-          //console.log("hopping x: " + this.x);
           break;
           // TODO: Implement your player's redering according to state
   }

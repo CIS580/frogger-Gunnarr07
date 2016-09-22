@@ -27,8 +27,8 @@ function Game(screen, updateFunction, renderFunction) {
   // Start the game loop
   this.oldTime = performance.now();
   this.paused = false;
-  this.onLog = false;
   this.idStats = document.getElementById('id_stats');
+  this.idRestart = document.getElementById('id_restart');
 }
 
 /**
@@ -40,16 +40,8 @@ Game.prototype.pause = function(flag) {
   this.paused = (flag == true);
 }
 
-/**
- * @function flag
- * Flag to see of frog is on the log
- * @param {bool} onlog true, false to not on log
- */
-Game.prototype.onlog = function (flag) {
-    this.onLog = (flag == true);
-}
-
 Game.prototype.restart = function () {
+    this.idRestart.style.display = "block";
     document.getElementById('id_button').onclick = function () {
         location.reload();
     }
