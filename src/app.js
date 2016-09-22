@@ -14,8 +14,8 @@ const Log = require('./log.js');
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
-var entities = new EntityManager(canvas.width, canvas.height, 64);
-//var entities = new EntityManager(canvas.width, canvas.height, 128);
+//var entities = new EntityManager(canvas.width, canvas.height, 64);
+var entities = new EntityManager(canvas.width, canvas.height, 128);
 var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
@@ -173,6 +173,7 @@ function update(elapsedTime) {
 
         }
         else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+            console.log("collision with log");
             smashed = false;
             onlog = true;
         }
@@ -255,7 +256,8 @@ function update(elapsedTime) {
         lives--;
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
     }
-    if ((player.x >= river1.x || player.x <= (river1.x + 64)) && !onlog) {
+    if ((player.x >= river1.x /*|| player.x <= (river1.x + 64)*/) && !onlog) {
+        console.log("im stuck here");
         if (lives == 0) {
             game.paused = true;
             idRestart.style.display = "block";
@@ -281,11 +283,6 @@ function render(elapsedTime, ctx) {
     road1.render(elapsedTime, ctx);
     road2.render(elapsedTime, ctx);
     river1.render(elapsedTime, ctx);
-    /*
-    rivers1.forEach(function (river) {
-        river.render(elapsedTime, ctx);
-    });
-    */
     river2.render(elapsedTime, ctx);
     entities.renderCells(ctx);
     log1.render(elapsedTime, ctx);
