@@ -20,8 +20,8 @@ var idRestart = document.getElementById('id_restart');
 var score = 0;
 var lives = 3;
 var level = 1;
-var removeRiver = [];
-
+var onlog = false;
+var smashed = false;
 
 // The player as a frog
 var player = new Player({ x: 0, y: 240 })
@@ -104,22 +104,6 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-    /*
-    while (removeRiver.length != 0) {
-        entities.addEntity(removeRiver.pop());
-    }
-    */
-    /*
-    for (var i = 0; i < removeRiver.length; i++) {
-        entities.addEntity(removeRiver.pop());
-        //console.log(removeRiver.pop());
-    }
-    */
-    /*
-    removeRiver.forEach(function (remove) {
-        entities.addEntity(remove.pop());
-    });
-    */
     player.update(elapsedTime);
     entities.updateEntity(player);
 
@@ -152,10 +136,11 @@ function update(elapsedTime) {
         player.y = 240;
         truckup.speed++;
         racecar.speed++;
-        log1.speed++;
+        //log1.speed++;
         //log2.speed++;
 
     }
+    /*
     if (player.x + 64 >= river1.x) {
         player.x = 0;
         player.y = 240;
@@ -169,7 +154,13 @@ function update(elapsedTime) {
             }
         }
     }
+    */
 
+
+
+
+    smashed = false;
+    onlog = false;
     entities.collide(function (entity1, entity2) {
         if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
             (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
@@ -177,85 +168,104 @@ function update(elapsedTime) {
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
             console.log("collision car and player");
-            //console.log(entity1);
-            //console.log(entity2);
-            player.x = 0;
-            player.y = 240;
-            lives--;
-            game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
-            if (lives == 0) {
-                game.paused = true;
-                idRestart.style.display = "block";
-                document.getElementById('id_button').onclick = function () {
-                    location.reload();
+            smashed = true;
+            onlog = false;
+
+        }
+        else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+            smashed = false;
+            onlog = true;
+        }
+        /*
+        if (player.x >= river1.x || player.x <= (river1.x + 64)) {
+            if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+                //game.onlog = true;
+                onlog = true;
+            }
+            if (!(onlog)) {
+                player.x = 0;
+                player.y = 240;
+                lives--;
+                game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+                if (lives == 0) {
+                    game.paused = true;
+                    idRestart.style.display = "block";
+                    game.restart();
+                    //document.getElementById('id_button').onclick = function () {
+                    //    location.reload();
+                    //}
                 }
             }
         }
-        else if (entity1 instanceof River && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof River) {
-            /*
-            if (entity1 instanceof River) {
-                removeRiver.push(entity1);
-                entities.removeEntity(entity1);
-            }
-            else if (entity2 instanceof River) {
-                removeRiver.push(entity2);
-                entities.removeEntity(entity2);
-            }
-            */
-            entity1.color = '#ff0000';
-            entity2.color = '#00ff00';
-            //console.log("collision river and log");
-            /*
-            console.log(entity1);
-            console.log(entity2);
-            */
-        }
-        else if ((player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Player && entity2 instanceof Log) ||
-            (player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Log && entity2 instanceof Player)) {
-            /*
-            player.x = 0;
-            player.y = 240;
-            lives--;
-            game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
-            if (lives == 0) {
-                game.paused = true;
-                idRestart.style.display = "block";
-                document.getElementById('id_button').onclick = function () {
-                    location.reload();
-                }
-            }
-            */
-        //    if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
-        //        entity1.color = '#ff0000';
-        //        entity2.color = '#00ff00';
-        //        console.log("collision log and player");
-        //        //game.paused = true;
-        //        /*
-        //        player.x = log.x + 65;
-        //        player.y = log.y + 65;
-        //        */
-        //        //console.log(entity1);
-        //        //console.log(entity2);
-        //        //game.paused = true;
-        //        //player.update(elapsedTime, "ridingLog");
-        //    }
-        //    else {
-        //        player.x = 0;
-        //        player.y = 240;
-        //        lives--;
-        //        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
-        //        if (lives == 0) {
-        //            game.paused = true;
-        //            idRestart.style.display = "block";
-        //            document.getElementById('id_button').onclick = function () {
-        //                location.reload();
-        //            }
+         */   
+        //else if ((player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Player && entity2 instanceof Log) ||
+        //    (player.x >= river1.x && player.x <= (river1.x + 64) && entity1 instanceof Log && entity2 instanceof Player)) {
+
+        //    /*
+        //    player.x = 0;
+        //    player.y = 240;
+        //    lives--;
+        //    game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+        //    if (lives == 0) {
+        //        game.paused = true;
+        //        idRestart.style.display = "block";
+        //        document.getElementById('id_button').onclick = function () {
+        //            location.reload();
         //        }
         //    }
-        }
+        //    */
+        ////    if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+        ////        entity1.color = '#ff0000';
+        ////        entity2.color = '#00ff00';
+        ////        console.log("collision log and player");
+        ////        //game.paused = true;
+        ////        /*
+        ////        player.x = log.x + 65;
+        ////        player.y = log.y + 65;
+        ////        */
+        ////        //console.log(entity1);
+        ////        //console.log(entity2);
+        ////        //game.paused = true;
+        ////        //player.update(elapsedTime, "ridingLog");
+        ////    }
+        ////    else {
+        ////        player.x = 0;
+        ////        player.y = 240;
+        ////        lives--;
+        ////        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+        ////        if (lives == 0) {
+        ////            game.paused = true;
+        ////            idRestart.style.display = "block";
+        ////            document.getElementById('id_button').onclick = function () {
+        ////                location.reload();
+        ////            }
+        ////        }
+        ////    }
+        //}
 
     });
-
+    if (smashed) {
+        if (lives == 0) {
+            game.paused = true;
+            idRestart.style.display = "block";
+            game.restart();
+        }
+        player.x = 0;
+        player.y = 240;
+        lives--;
+        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+    }
+    if ((player.x >= river1.x || player.x <= (river1.x + 64)) && !onlog) {
+        if (lives == 0) {
+            game.paused = true;
+            idRestart.style.display = "block";
+            game.restart();
+        }
+        player.x = 0;
+        player.y = 240;
+        lives--;
+        game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level;
+    }
 }
 
 /**
@@ -281,7 +291,6 @@ function render(elapsedTime, ctx) {
     log1.render(elapsedTime, ctx);
     //log2.render(elapsedTime, ctx);
     player.render(elapsedTime, ctx);
-    //minicar.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
     racecar.render(elapsedTime, ctx);
 }

@@ -16,8 +16,8 @@ function TruckUp(position) {
     this.state = "driving";
     this.x = position.x;
     this.y = position.y;
-    this.width = 200;
-    this.height = 270;
+    this.width = 100;
+    this.height = 135;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/car7.png');
     this.timer = 0;
@@ -60,9 +60,9 @@ TruckUp.prototype.render = function (time, ctx) {
               // image
               this.spritesheet,
               // source rectangle
-              0, 0, this.width, this.height,
+              0, 0, 200, 270,
               // destination rectangle
-              this.x, this.y, this.width / 2, this.height / 2
+              this.x, this.y, this.width, this.height
           );
             ctx.strokeStyle = this.color;
             ctx.strokeRect(this.x, this.y, this.width / 2, this.height / 2);
