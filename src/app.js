@@ -26,28 +26,29 @@ var smashed = false;
 var player = new Player({ x: 0, y: 240 })
 entities.addEntity(player);
 
-// create game objects
+// Create first road and truck 
 var road1 = new Road({ x: 128, y: 0 });
 var truckup = new TruckUp({ x: 150, y: canvas.height });
 entities.addEntity(truckup);
 
-
+// Create second road and truck
 var road2 = new Road({ x: 450, y: 0 });
 var racecar = new RaceCar({ x: 450, y: canvas.height });
 entities.addEntity(racecar);
 
-
+// Create first river and logs for it
 var river1 = new River({ x: 300, y: 0 });
 var log1 = new Log({ x: 300, y: 264 });
 entities.addEntity(log1);
-
-
-var river2 = new River({ x: 640, y: 0 });
-entities.addEntity(river2);
 var log2 = new Log({ x: 300, y: canvas.height })
 entities.addEntity(log2);
 
+// Create second river and logs for it
+var river2 = new River({ x: 640, y: 0 });
+entities.addEntity(river2);
 
+
+// Check for key input for player movement and game pausing
 window.onkeydown = function (event) {
     event.preventDefault();
     switch (event.keyCode) {

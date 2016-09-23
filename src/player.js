@@ -54,7 +54,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-left":
             this.timer += time;
-            this.y += 2;
+            this.x -= 2;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
