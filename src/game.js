@@ -1,3 +1,9 @@
+/* Game class
+ * Author: Nathan Bean
+ * Modified by: Jeremy Taylor
+ * game.js
+*/
+
 "use strict";
 
 /**

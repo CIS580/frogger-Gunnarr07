@@ -1,3 +1,8 @@
+/* River class
+ * Author: Jeremy Taylor
+ * river.js
+*/
+
 "use strict";
 
 /**

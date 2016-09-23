@@ -1,3 +1,8 @@
+/* Log class
+ * Author: Jeremy Taylor
+ * log.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;

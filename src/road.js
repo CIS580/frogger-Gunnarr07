@@ -1,3 +1,8 @@
+/* Road class
+ * Author: Jeremy Taylor
+ * road.js
+*/
+
 "use strict";
 
 /**

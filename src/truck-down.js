@@ -1,3 +1,8 @@
+/* TruckDown class
+ * Author: Jeremy Taylor
+ * truck-down.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;

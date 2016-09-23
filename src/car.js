@@ -1,3 +1,8 @@
+/* CarDown class
+ * Author: Jeremy Taylor
+ * car.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;

@@ -1,3 +1,8 @@
+/* TruckUp class
+ * Author: Jeremy Taylor
+ * truck-up.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;

@@ -277,6 +277,11 @@ function render(elapsedTime, ctx) {
 }
 
 },{"./ambulance.js":1,"./car.js":3,"./entity-manager":4,"./game.js":5,"./log.js":6,"./player.js":7,"./river.js":8,"./road.js":9,"./truck-down.js":10,"./truck-up.js":11}],3:[function(require,module,exports){
+/* CarDown class
+ * Author: Jeremy Taylor
+ * car.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -447,6 +452,12 @@ EntityManager.prototype.renderCells = function (ctx) {
     }
 }
 },{}],5:[function(require,module,exports){
+/* Game class
+ * Author: Nathan Bean
+ * Modified by: Jeremy Taylor
+ * game.js
+*/
+
 "use strict";
 
 /**
@@ -519,6 +530,11 @@ Game.prototype.loop = function(newTime) {
 }
 
 },{}],6:[function(require,module,exports){
+/* Log class
+ * Author: Jeremy Taylor
+ * log.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -759,6 +775,11 @@ Player.prototype.render = function(time, ctx) {
 }
 
 },{}],8:[function(require,module,exports){
+/* River class
+ * Author: Jeremy Taylor
+ * river.js
+*/
+
 "use strict";
 
 /**
@@ -797,6 +818,11 @@ River.prototype.render = function (time, ctx) {
 }
 
 },{}],9:[function(require,module,exports){
+/* Road class
+ * Author: Jeremy Taylor
+ * road.js
+*/
+
 "use strict";
 
 /**
@@ -827,6 +853,11 @@ Road.prototype.render = function (time, ctx) {
 }
 
 },{}],10:[function(require,module,exports){
+/* TruckDown class
+ * Author: Jeremy Taylor
+ * truck-down.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -897,6 +928,11 @@ TruckDown.prototype.render = function (time, ctx) {
 }
 
 },{}],11:[function(require,module,exports){
+/* TruckUp class
+ * Author: Jeremy Taylor
+ * truck-up.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
