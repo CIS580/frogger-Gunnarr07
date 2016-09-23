@@ -1,4 +1,77 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+const MS_PER_FRAME = 1000 / 8;
+
+/**
+ * @module exports the TruckUp class
+ */
+module.exports = exports = Ambulance;
+
+/**
+ * @constructor Ambulance
+ * Creates a new player object
+ * @param {Postition} position object specifying an x and y
+ */
+function Ambulance(position) {
+    this.state = "driving";
+    this.x = position.x;
+    this.y = position.y;
+    this.width = 57;
+    this.height = 133;
+    this.spritesheet = new Image();
+    this.spritesheet.src = encodeURI('assets/car6.png');
+    this.timer = 0;
+    this.frame = 0;
+    this.speed = 1;
+}
+
+
+
+/**
+ * @function updates the Ambulance object
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ */
+Ambulance.prototype.update = function (time) {
+    switch (this.state) {
+        case "driving":
+            this.timer += time;
+            this.y -= this.speed;
+            if (this.y < -this.height) this.y = 480;
+            /*
+            if (this.timer > MS_PER_FRAME) {
+                this.timer = 0;
+                this.frame += 1;
+                if (this.frame > 3) this.frame = 0;
+            }
+            */
+            break;
+    }
+}
+
+/**
+ * @function renders the Ambulance into the provided context
+ * {DOMHighResTimeStamp} time the elapsed time since the last frame
+ * {CanvasRenderingContext2D} ctx the context to render into
+ */
+Ambulance.prototype.render = function (time, ctx) {
+    switch (this.state) {
+        case "driving":
+            ctx.drawImage(
+              // image
+              this.spritesheet,
+              // source rectangle
+              0, 0, 112, 266,
+              // destination rectangle
+              this.x, this.y, this.width, this.height
+          );
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+            break;
+    }
+}
+
+},{}],2:[function(require,module,exports){
 "use strict;"
 
 /* Classes */
@@ -8,6 +81,7 @@ const Player = require('./player.js');
 const Road = require('./road.js');
 const TruckUp = require('./truck-up.js');
 const TruckDown = require('./truck-down.js');
+const Ambulance = require('./ambulance.js');
 const MiniCar = require('./minicar.js');
 const RaceCar = require('./race-car.js');
 const River = require('./river.js');
@@ -31,6 +105,8 @@ entities.addEntity(player);
 var road1 = new Road({ x: 128, y: 0 });
 var truckup = new TruckUp({ x: 150, y: canvas.height });
 entities.addEntity(truckup);
+var ambulance = new Ambulance({ x: 150, y: 150 });
+entities.addEntity(ambulance);
 
 // Create second road and truck
 var road2 = new Road({ x: 512, y: 0 });
@@ -42,10 +118,10 @@ entities.addEntity(racecar);
  */
 
 // Create first river and logs for it
-var river1 = new River({ x: 300, y: 0 });
-var log1 = new Log({ x: 300, y: 264 });
+var river1 = new River({ x: 320, y: 0 });
+var log1 = new Log({ x: 320, y: 0 });
 entities.addEntity(log1);
-var log2 = new Log({ x: 300, y: canvas.height })
+var log2 = new Log({ x: 320, y: 300 })
 entities.addEntity(log2);
 
 // Create second river and logs for it
@@ -121,10 +197,9 @@ function update(elapsedTime) {
 
     truckDown.update(elapsedTime);
     entities.updateEntity(truckDown);
-    /*
-    racecar.update(elapsedTime);
-    entities.updateEntity(racecar);
-    */
+    
+    ambulance.update(elapsedTime);
+    entities.updateEntity(ambulance);
 
     log1.update(elapsedTime);
     entities.updateEntity(log1);
@@ -139,6 +214,10 @@ function update(elapsedTime) {
         player.y = 240;
         truckup.speed++;
         truckDown.speed++;
+        ambulance.speed++;
+        if (level == 2) {
+            player.speed++;
+        }
     }
 
     smashed = false;
@@ -146,17 +225,14 @@ function update(elapsedTime) {
 
     entities.collide(function (entity1, entity2) {
         if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
-            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player)) {
+            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player) ||
+            (entity1 instanceof Player && entity2 instanceof Ambulance || entity1 instanceof Ambulance && entity2 instanceof Player)) {
 
-            entity1.color = '#ff0000';
-            entity2.color = '#00ff00';
-            console.log("collision car and player");
             smashed = true;
             onlog = false;
 
         }
         else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
-            console.log("collision with log");
             smashed = false;
             onlog = true;
         }
@@ -194,10 +270,10 @@ function render(elapsedTime, ctx) {
     player.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
     truckDown.render(elapsedTime, ctx);
-    //racecar.render(elapsedTime, ctx);
+    ambulance.render(elapsedTime, ctx);
 }
 
-},{"./entity-manager":2,"./game.js":3,"./log.js":4,"./minicar.js":5,"./player.js":6,"./race-car.js":7,"./river.js":8,"./road.js":9,"./truck-down.js":10,"./truck-up.js":11}],2:[function(require,module,exports){
+},{"./ambulance.js":1,"./entity-manager":3,"./game.js":4,"./log.js":5,"./minicar.js":6,"./player.js":7,"./race-car.js":8,"./river.js":9,"./road.js":10,"./truck-down.js":11,"./truck-up.js":12}],3:[function(require,module,exports){
 module.exports = exports = EntityManager;
 
 function EntityManager(width, height, cellSize) {
@@ -298,7 +374,7 @@ EntityManager.prototype.renderCells = function (ctx) {
         }
     }
 }
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 /**
@@ -366,7 +442,7 @@ Game.prototype.loop = function(newTime) {
   this.frontCtx.drawImage(this.backBuffer, 0, 0);
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -387,7 +463,6 @@ function Log(position) {
     this.y = position.y;
     this.width = 64;
     this.height = 128;
-    //this.height = 64;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/log.png');
     this.timer = 0;
@@ -438,7 +513,7 @@ Log.prototype.render = function (time, ctx) {
     }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -511,7 +586,7 @@ MiniCar.prototype.render = function (time, ctx) {
     }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
@@ -536,6 +611,7 @@ function Player(position) {
   this.spritesheet.src = encodeURI('assets/PlayerSprite2.png');
   this.timer = 0;
   this.frame = 0;
+  this.speed = 2;
 }
 
 
@@ -556,7 +632,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-up":
             this.timer += time;
-            this.y -= 2;
+            this.y -= this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -568,7 +644,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-left":
             this.timer += time;
-            this.x -= 2;
+            this.x -= this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -580,7 +656,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-right":
             this.timer += time;
-            this.x += 2;
+            this.x += this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -592,7 +668,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-down":
             this.timer += time;
-            this.y += 2;
+            this.y += this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -671,7 +747,7 @@ Player.prototype.render = function(time, ctx) {
   */
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -743,7 +819,7 @@ RaceCar.prototype.render = function (time, ctx) {
             break;
     }
 }
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 /**
@@ -803,7 +879,7 @@ River.prototype.render = function (time, ctx) {
     );
 }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 /**
@@ -833,7 +909,7 @@ Road.prototype.render = function (time, ctx) {
     );
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -905,7 +981,7 @@ TruckDown.prototype.render = function (time, ctx) {
     }
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 const MS_PER_FRAME = 1000 / 8;
@@ -978,4 +1054,4 @@ TruckUp.prototype.render = function (time, ctx) {
     }
 }
 
-},{}]},{},[1]);
+},{}]},{},[2]);

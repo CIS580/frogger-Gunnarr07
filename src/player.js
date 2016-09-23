@@ -22,6 +22,7 @@ function Player(position) {
   this.spritesheet.src = encodeURI('assets/PlayerSprite2.png');
   this.timer = 0;
   this.frame = 0;
+  this.speed = 2;
 }
 
 
@@ -42,7 +43,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-up":
             this.timer += time;
-            this.y -= 2;
+            this.y -= this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -54,7 +55,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-left":
             this.timer += time;
-            this.x -= 2;
+            this.x -= this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -66,7 +67,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-right":
             this.timer += time;
-            this.x += 2;
+            this.x += this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -78,7 +79,7 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-down":
             this.timer += time;
-            this.y += 2;
+            this.y += this.speed;
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;

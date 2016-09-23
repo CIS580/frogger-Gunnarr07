@@ -3,23 +3,23 @@
 const MS_PER_FRAME = 1000 / 8;
 
 /**
- * @module exports the Player class
+ * @module exports the TruckUp class
  */
-module.exports = exports = Log;
+module.exports = exports = Ambulance;
 
 /**
- * @constructor Player
+ * @constructor Ambulance
  * Creates a new player object
  * @param {Postition} position object specifying an x and y
  */
-function Log(position) {
-    this.state = "moving";
+function Ambulance(position) {
+    this.state = "driving";
     this.x = position.x;
     this.y = position.y;
-    this.width = 64;
-    this.height = 128;
+    this.width = 57;
+    this.height = 133;
     this.spritesheet = new Image();
-    this.spritesheet.src = encodeURI('assets/log.png');
+    this.spritesheet.src = encodeURI('assets/car6.png');
     this.timer = 0;
     this.frame = 0;
     this.speed = 1;
@@ -28,12 +28,12 @@ function Log(position) {
 
 
 /**
- * @function updates the player object
+ * @function updates the Ambulance object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Log.prototype.update = function (time) {
+Ambulance.prototype.update = function (time) {
     switch (this.state) {
-        case "moving":
+        case "driving":
             this.timer += time;
             this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
@@ -49,21 +49,23 @@ Log.prototype.update = function (time) {
 }
 
 /**
- * @function renders the player into the provided context
+ * @function renders the Ambulance into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
-Log.prototype.render = function (time, ctx) {
+Ambulance.prototype.render = function (time, ctx) {
     switch (this.state) {
-        case "moving":
+        case "driving":
             ctx.drawImage(
               // image
               this.spritesheet,
               // source rectangle
-              this.frame * 64, 64, this.width, this.height,
+              0, 0, 112, 266,
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
             break;
     }
 }
