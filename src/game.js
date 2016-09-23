@@ -28,6 +28,7 @@ function Game(screen, updateFunction, renderFunction) {
   this.oldTime = performance.now();
   this.paused = false;
   this.idStats = document.getElementById('id_stats');
+  this.idRestart = document.getElementById('id_restart');
 }
 
 /**
@@ -37,6 +38,13 @@ function Game(screen, updateFunction, renderFunction) {
  */
 Game.prototype.pause = function(flag) {
   this.paused = (flag == true);
+}
+
+Game.prototype.restart = function () {
+    this.idRestart.style.display = "block";
+    document.getElementById('id_button').onclick = function () {
+        location.reload();
+    }
 }
 
 /**
