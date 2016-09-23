@@ -1,3 +1,9 @@
+/* Entity-manager code from CIS580
+ * Author: Nathan Bean
+ * Used by: Jeremy Taylor
+ *
+*/
+
 module.exports = exports = EntityManager;
 
 function EntityManager(width, height, cellSize) {
@@ -93,8 +99,8 @@ function checkForCollision(entity1, entity2, callback) {
 EntityManager.prototype.renderCells = function (ctx) {
     for (var x = 0; x < this.widthInCells; x++) {
         for (var y = 0; y < this.heightInCells; y++) {
-            ctx.strokeStyle = '#333333';
-            ctx.strokeRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
+            //ctx.strokeStyle = '#333333';
+            //ctx.strokeRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
         }
     }
 }
