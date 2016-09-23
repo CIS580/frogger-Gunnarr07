@@ -17,7 +17,7 @@ function TruckUp(position) {
     this.x = position.x;
     this.y = position.y;
     this.width = 57;
-    this.height = 133;
+    this.height = 126;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/truck_up.png');
     this.timer = 0;
@@ -64,8 +64,6 @@ TruckUp.prototype.render = function (time, ctx) {
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
-            ctx.strokeStyle = this.color;
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
             break;
     }
 }

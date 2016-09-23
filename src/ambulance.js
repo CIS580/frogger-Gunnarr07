@@ -17,7 +17,7 @@ function Ambulance(position) {
     this.x = position.x;
     this.y = position.y;
     this.width = 57;
-    this.height = 133;
+    this.height = 128;
     this.spritesheet = new Image();
     this.spritesheet.src = encodeURI('assets/car6.png');
     this.timer = 0;
@@ -37,13 +37,6 @@ Ambulance.prototype.update = function (time) {
             this.timer += time;
             this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
-            /*
-            if (this.timer > MS_PER_FRAME) {
-                this.timer = 0;
-                this.frame += 1;
-                if (this.frame > 3) this.frame = 0;
-            }
-            */
             break;
     }
 }
@@ -64,8 +57,6 @@ Ambulance.prototype.render = function (time, ctx) {
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
-            ctx.strokeStyle = this.color;
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
             break;
     }
 }

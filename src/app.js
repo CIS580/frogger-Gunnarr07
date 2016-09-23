@@ -8,8 +8,7 @@ const Road = require('./road.js');
 const TruckUp = require('./truck-up.js');
 const TruckDown = require('./truck-down.js');
 const Ambulance = require('./ambulance.js');
-const MiniCar = require('./minicar.js');
-const RaceCar = require('./race-car.js');
+const CarDown = require('./car.js');
 const River = require('./river.js');
 const Log = require('./log.js');
 
@@ -36,12 +35,10 @@ entities.addEntity(ambulance);
 
 // Create second road and truck
 var road2 = new Road({ x: 512, y: 0 });
-var truckDown = new TruckDown({ x: 512, y: -133 });
+var truckDown = new TruckDown({ x: 534, y: -133 });
 entities.addEntity(truckDown);
-/*
-var racecar = new RaceCar({ x: 512, y: canvas.height });
-entities.addEntity(racecar);
- */
+var carDown = new CarDown({ x: 534, y: 150 });
+entities.addEntity(carDown);
 
 // Create first river and logs for it
 var river1 = new River({ x: 320, y: 0 });
@@ -121,11 +118,14 @@ function update(elapsedTime) {
     truckup.update(elapsedTime);
     entities.updateEntity(truckup);
 
+    ambulance.update(elapsedTime);
+    entities.updateEntity(ambulance);
+
     truckDown.update(elapsedTime);
     entities.updateEntity(truckDown);
     
-    ambulance.update(elapsedTime);
-    entities.updateEntity(ambulance);
+    carDown.update(elapsedTime);
+    entities.updateEntity(carDown);
 
     log1.update(elapsedTime);
     entities.updateEntity(log1);
@@ -139,8 +139,9 @@ function update(elapsedTime) {
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
         truckup.speed++;
-        truckDown.speed++;
         ambulance.speed++;
+        truckDown.speed++;
+        carDown.speed++;
         if (level == 2) {
             player.speed++;
         }
@@ -150,9 +151,10 @@ function update(elapsedTime) {
     onlog = false;
 
     entities.collide(function (entity1, entity2) {
-        if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
-            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player) ||
-            (entity1 instanceof Player && entity2 instanceof Ambulance || entity1 instanceof Ambulance && entity2 instanceof Player)) {
+        if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) || 
+            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player) || 
+            (entity1 instanceof Player && entity2 instanceof Ambulance || entity1 instanceof Ambulance && entity2 instanceof Player) || 
+            (entity1 instanceof Player && entity2 instanceof CarDown || entity1 instanceof CarDown && entity2 instanceof Player)) {
 
             smashed = true;
             onlog = false;
@@ -195,6 +197,7 @@ function render(elapsedTime, ctx) {
     log2.render(elapsedTime, ctx);
     player.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
-    truckDown.render(elapsedTime, ctx);
     ambulance.render(elapsedTime, ctx);
+    truckDown.render(elapsedTime, ctx);
+    carDown.render(elapsedTime, ctx);
 }
