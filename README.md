@@ -60,6 +60,8 @@ The bundle will automatically be re-created every time you change a source file.
 ## Credits
 The frog art was provided by [tgfcoder](http://opengameart.org/users/tgfcoder) of [Open Game Art](http://opengameart.org) as a public domain work.
 
+The car2, car6, truck_down, truck_up was provided by [](http://opengameart.org/users/telefrag-entertainment) of [Open Game Art](http://opengameart.org) as a public domain work.
+
 Mini and Sports Car art was provided by  [bahi](http://opengameart.org/users/bahi) of [Open Game Art](http://opengameart.org) under a CC-BY license.
 
 Sedan and Pickup art was provided by  [bahi](http://opengameart.org/users/bahi) of [Open Game Art](http://opengameart.org) under a CC-BY license.
