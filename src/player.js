@@ -1,3 +1,9 @@
+/* Player class
+ * Author: Nathan Bean
+ * Modified by: Jeremy Taylor
+ * player.js
+*/
+
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
@@ -43,7 +49,9 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-up":
             this.timer += time;
-            this.y -= this.speed;
+            if (this.y >= 0) {
+                this.y -= this.speed;
+            }
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -55,7 +63,9 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-left":
             this.timer += time;
-            this.x -= this.speed;
+            if(this.x >= 0){
+                this.x -= this.speed;
+            }
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;
@@ -79,7 +89,9 @@ Player.prototype.update = function (time) {
             break;
         case "hopping-down":
             this.timer += time;
-            this.y += this.speed;
+            if (this.y + 64 <= 480) {
+                this.y += this.speed;
+            }
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
                 this.frame += 1;

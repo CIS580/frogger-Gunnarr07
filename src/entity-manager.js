@@ -1,7 +1,7 @@
 /* Entity-manager code from CIS580
  * Author: Nathan Bean
  * Used by: Jeremy Taylor
- *
+ * entity-manager.js
 */
 
 module.exports = exports = EntityManager;

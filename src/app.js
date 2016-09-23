@@ -1,3 +1,9 @@
+/* App class
+ * Author: Nathan Bean
+ * Modified by: Jeremy Taylor
+ * app.js
+*/
+
 "use strict;"
 
 /* Classes */
@@ -46,13 +52,6 @@ var log1 = new Log({ x: 320, y: 0 });
 entities.addEntity(log1);
 var log2 = new Log({ x: 320, y: 300 })
 entities.addEntity(log2);
-
-// Create second river and logs for it
-var river2 = new River({ x: 640, y: 0 });
-entities.addEntity(river2);
-var log3 = new Log({ x: 640, y: 150 });
-//entities.addEntity(log3);
-
 
 // Check for key input for player movement and game pausing
 window.onkeydown = function (event) {
@@ -135,9 +134,6 @@ function update(elapsedTime) {
     log2.update(elapsedTime);
     entities.updateEntity(log2);
 
-    log3.update(elapsedTime);
-    //entities.updateEntity(log3);
-
     // Check if player made it across safely
     if (player.x >= canvas.width) {
         score += 100;
@@ -200,11 +196,9 @@ function render(elapsedTime, ctx) {
     road1.render(elapsedTime, ctx);
     road2.render(elapsedTime, ctx);
     river1.render(elapsedTime, ctx);
-    river2.render(elapsedTime, ctx);
     entities.renderCells(ctx);
     log1.render(elapsedTime, ctx);
     log2.render(elapsedTime, ctx);
-    log3.render(elapsedTime, ctx);
     player.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
     ambulance.render(elapsedTime, ctx);
