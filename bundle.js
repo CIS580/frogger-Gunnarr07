@@ -820,7 +820,7 @@ module.exports = exports = TruckDown;
 
 /**
  * @constructor TruckDown
- * Creates a new player object
+ * Creates a new truck down object
  * @param {Postition} position object specifying an x and y
  */
 function TruckDown(position) {
@@ -838,7 +838,7 @@ function TruckDown(position) {
 
 
 /**
- * @function updates the truck object
+ * @function updates the truck down object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
 TruckDown.prototype.update = function (time) {
@@ -859,7 +859,7 @@ TruckDown.prototype.update = function (time) {
 }
 
 /**
- * @function renders the truck into the provided context
+ * @function renders the truck down into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
@@ -890,7 +890,7 @@ module.exports = exports = TruckUp;
 
 /**
  * @constructor TruckUp
- * Creates a new player object
+ * Creates a new truck up object
  * @param {Postition} position object specifying an x and y
  */
 function TruckUp(position) {
@@ -909,7 +909,7 @@ function TruckUp(position) {
 
 
 /**
- * @function updates the truck object
+ * @function updates the truck up object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
 TruckUp.prototype.update = function (time) {

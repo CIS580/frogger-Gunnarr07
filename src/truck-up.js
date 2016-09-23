@@ -9,7 +9,7 @@ module.exports = exports = TruckUp;
 
 /**
  * @constructor TruckUp
- * Creates a new player object
+ * Creates a new truck up object
  * @param {Postition} position object specifying an x and y
  */
 function TruckUp(position) {
@@ -28,7 +28,7 @@ function TruckUp(position) {
 
 
 /**
- * @function updates the truck object
+ * @function updates the truck up object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
 TruckUp.prototype.update = function (time) {
