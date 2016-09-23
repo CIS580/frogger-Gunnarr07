@@ -3,7 +3,7 @@ canvas#screen {
   box-shadow: 4px 4px 4px #777;
 }
 
-.modal {
+.message {
     display: none;
     position: fixed;
     left: 180px;

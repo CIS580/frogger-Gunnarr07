@@ -33,9 +33,13 @@ var truckup = new TruckUp({ x: 150, y: canvas.height });
 entities.addEntity(truckup);
 
 // Create second road and truck
-var road2 = new Road({ x: 450, y: 0 });
-var racecar = new RaceCar({ x: 450, y: canvas.height });
+var road2 = new Road({ x: 512, y: 0 });
+var truckDown = new TruckDown({ x: 512, y: -133 });
+entities.addEntity(truckDown);
+/*
+var racecar = new RaceCar({ x: 512, y: canvas.height });
 entities.addEntity(racecar);
+ */
 
 // Create first river and logs for it
 var river1 = new River({ x: 300, y: 0 });
@@ -75,10 +79,12 @@ window.onkeydown = function (event) {
             break;
         case 27:
             if (game.paused) {
+                game.idPaused.style.display = "none";
                 game.paused = false;
             }
             else {
                 game.paused = true;
+                game.idPaused.style.display = "block";
             }
             break;
     }
@@ -113,8 +119,12 @@ function update(elapsedTime) {
     truckup.update(elapsedTime);
     entities.updateEntity(truckup);
 
+    truckDown.update(elapsedTime);
+    entities.updateEntity(truckDown);
+    /*
     racecar.update(elapsedTime);
     entities.updateEntity(racecar);
+    */
 
     log1.update(elapsedTime);
     entities.updateEntity(log1);
@@ -128,7 +138,7 @@ function update(elapsedTime) {
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
         truckup.speed++;
-        racecar.speed++;
+        truckDown.speed++;
     }
 
     smashed = false;
@@ -136,7 +146,7 @@ function update(elapsedTime) {
 
     entities.collide(function (entity1, entity2) {
         if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
-            (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
+            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player)) {
 
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
@@ -183,7 +193,8 @@ function render(elapsedTime, ctx) {
     log2.render(elapsedTime, ctx);
     player.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
-    racecar.render(elapsedTime, ctx);
+    truckDown.render(elapsedTime, ctx);
+    //racecar.render(elapsedTime, ctx);
 }
 
 },{"./entity-manager":2,"./game.js":3,"./log.js":4,"./minicar.js":5,"./player.js":6,"./race-car.js":7,"./river.js":8,"./road.js":9,"./truck-down.js":10,"./truck-up.js":11}],2:[function(require,module,exports){
@@ -319,6 +330,7 @@ function Game(screen, updateFunction, renderFunction) {
   this.paused = false;
   this.idStats = document.getElementById('id_stats');
   this.idRestart = document.getElementById('id_restart');
+  this.idPaused = document.getElementById('id_paused');
 }
 
 /**
@@ -829,22 +841,21 @@ const MS_PER_FRAME = 1000 / 8;
 /**
  * @module exports the TruckUp class
  */
-module.exports = exports = TruckUp;
+module.exports = exports = TruckDown;
 
 /**
- * @constructor TruckUp
+ * @constructor TruckDown
  * Creates a new player object
  * @param {Postition} position object specifying an x and y
  */
-function TruckUp(position) {
+function TruckDown(position) {
     this.state = "driving";
     this.x = position.x;
     this.y = position.y;
     this.width = 57;
     this.height = 133;
     this.spritesheet = new Image();
-    this.spritesheet.src = encodeURI('assets/truck_up.png');
-    this.timer = 0;
+    this.spritesheet.src = encodeURI('assets/truck_down.png');
     this.frame = 0;
     this.speed = 1;
 }
@@ -855,12 +866,12 @@ function TruckUp(position) {
  * @function updates the truck object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-TruckUp.prototype.update = function (time) {
+TruckDown.prototype.update = function (time) {
     switch (this.state) {
         case "driving":
             this.timer += time;
             this.y += this.speed;
-            if (this.y < -this.height) this.y = 0;
+            if (this.y > 480) this.y = -this.height;
             /*
             if (this.timer > MS_PER_FRAME) {
                 this.timer = 0;
@@ -877,7 +888,7 @@ TruckUp.prototype.update = function (time) {
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
-TruckUp.prototype.render = function (time, ctx) {
+TruckDown.prototype.render = function (time, ctx) {
     switch (this.state) {
         case "driving":
             ctx.drawImage(

@@ -8,15 +8,26 @@
     <h1>Play Frogger</h1>
     <h3 id="id_stats">Lives: 3 Score: 0 Level: 1</h3>
     <canvas id="screen" width="760" height="480"></canvas>
-    <div id="id_restart" class="modal">
+    <div id="id_restart" class="message">
         <p>You loose</p>
         <button id="id_button">Restart Game</button>
     </div>
-    <div id="id_paused" class="modal">
+    <div id="id_paused" class="message">
         <p>Paused</p>
         <p>Press escape key (esc) to contiune playing snake</p>
     </div>
     <h2>Instructions</h2>
+    <ul>
+        <li>Press the escape key (esc) to pause and unpause the game</li>
+        <li>Use the arrow keys to move the frog</li>
+        <li>You start with 3 lives</li>
+        <li>Getting hit by cars and falling into the water will cause you to reset to start and losse a life</li>
+        <li>Loosing all 3 lives will cause you to loose the game</li>
+        <li>
+            Each time you make it across safely your scrore increases and you advance to the next
+            level
+        </li>
+    </ul>
     <script type="text/javascript" src="bundle.js"></script>
   </body>
 </html>

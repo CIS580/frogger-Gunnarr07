@@ -32,9 +32,13 @@ var truckup = new TruckUp({ x: 150, y: canvas.height });
 entities.addEntity(truckup);
 
 // Create second road and truck
-var road2 = new Road({ x: 450, y: 0 });
-var racecar = new RaceCar({ x: 450, y: canvas.height });
+var road2 = new Road({ x: 512, y: 0 });
+var truckDown = new TruckDown({ x: 512, y: -133 });
+entities.addEntity(truckDown);
+/*
+var racecar = new RaceCar({ x: 512, y: canvas.height });
 entities.addEntity(racecar);
+ */
 
 // Create first river and logs for it
 var river1 = new River({ x: 300, y: 0 });
@@ -74,10 +78,12 @@ window.onkeydown = function (event) {
             break;
         case 27:
             if (game.paused) {
+                game.idPaused.style.display = "none";
                 game.paused = false;
             }
             else {
                 game.paused = true;
+                game.idPaused.style.display = "block";
             }
             break;
     }
@@ -112,8 +118,12 @@ function update(elapsedTime) {
     truckup.update(elapsedTime);
     entities.updateEntity(truckup);
 
+    truckDown.update(elapsedTime);
+    entities.updateEntity(truckDown);
+    /*
     racecar.update(elapsedTime);
     entities.updateEntity(racecar);
+    */
 
     log1.update(elapsedTime);
     entities.updateEntity(log1);
@@ -127,7 +137,7 @@ function update(elapsedTime) {
         game.idStats.innerHTML = "Lives: " + lives + " Score: " + score + " Level: " + level; player.x = 0;
         player.y = 240;
         truckup.speed++;
-        racecar.speed++;
+        truckDown.speed++;
     }
 
     smashed = false;
@@ -135,7 +145,7 @@ function update(elapsedTime) {
 
     entities.collide(function (entity1, entity2) {
         if ((entity1 instanceof Player && entity2 instanceof TruckUp || entity1 instanceof TruckUp && entity2 instanceof Player) ||
-            (entity1 instanceof Player && entity2 instanceof RaceCar || entity1 instanceof RaceCar && entity2 instanceof Player)) {
+            (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player)) {
 
             entity1.color = '#ff0000';
             entity2.color = '#00ff00';
@@ -182,5 +192,6 @@ function render(elapsedTime, ctx) {
     log2.render(elapsedTime, ctx);
     player.render(elapsedTime, ctx);
     truckup.render(elapsedTime, ctx);
-    racecar.render(elapsedTime, ctx);
+    truckDown.render(elapsedTime, ctx);
+    //racecar.render(elapsedTime, ctx);
 }

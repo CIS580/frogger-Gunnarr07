@@ -29,6 +29,7 @@ function Game(screen, updateFunction, renderFunction) {
   this.paused = false;
   this.idStats = document.getElementById('id_stats');
   this.idRestart = document.getElementById('id_restart');
+  this.idPaused = document.getElementById('id_paused');
 }
 
 /**
