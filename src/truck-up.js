@@ -37,13 +37,6 @@ TruckUp.prototype.update = function (time) {
             this.timer += time;
             this.y -= this.speed;
             if (this.y < -this.height) this.y = 480;
-            /*
-            if (this.timer > MS_PER_FRAME) {
-                this.timer = 0;
-                this.frame += 1;
-                if (this.frame > 3) this.frame = 0;
-            }
-            */
             break;
     }
 }

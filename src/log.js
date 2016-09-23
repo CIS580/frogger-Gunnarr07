@@ -3,13 +3,13 @@
 const MS_PER_FRAME = 1000 / 8;
 
 /**
- * @module exports the Player class
+ * @module exports the Log class
  */
 module.exports = exports = Log;
 
 /**
- * @constructor Player
- * Creates a new player object
+ * @constructor Log
+ * Creates a new log object
  * @param {Postition} position object specifying an x and y
  */
 function Log(position) {
@@ -28,7 +28,7 @@ function Log(position) {
 
 
 /**
- * @function updates the player object
+ * @function updates the log object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
 Log.prototype.update = function (time) {
@@ -49,7 +49,7 @@ Log.prototype.update = function (time) {
 }
 
 /**
- * @function renders the player into the provided context
+ * @function renders the log into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
@@ -60,7 +60,7 @@ Log.prototype.render = function (time, ctx) {
               // image
               this.spritesheet,
               // source rectangle
-              this.frame * 64, 64, this.width, this.height,
+              0, 0, this.width, this.height,
               // destination rectangle
               this.x, this.y, this.width, this.height
           );

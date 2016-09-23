@@ -41,6 +41,10 @@ Game.prototype.pause = function(flag) {
   this.paused = (flag == true);
 }
 
+/**
+ * @function restart
+ * Allow the player restart the game if they lost
+ */
 Game.prototype.restart = function () {
     this.idRestart.style.display = "block";
     document.getElementById('id_button').onclick = function () {
