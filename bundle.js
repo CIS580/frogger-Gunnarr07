@@ -116,7 +116,7 @@ entities.addEntity(log2);
 var river2 = new River({ x: 640, y: 0 });
 entities.addEntity(river2);
 var log3 = new Log({ x: 640, y: 150 });
-entities.addEntity(log3);
+//entities.addEntity(log3);
 
 
 // Check for key input for player movement and game pausing
@@ -201,7 +201,7 @@ function update(elapsedTime) {
     entities.updateEntity(log2);
 
     log3.update(elapsedTime);
-    entities.updateEntity(log3);
+    //entities.updateEntity(log3);
 
     // Check if player made it across safely
     if (player.x >= canvas.width) {
@@ -227,12 +227,13 @@ function update(elapsedTime) {
             (entity1 instanceof Player && entity2 instanceof TruckDown || entity1 instanceof TruckDown && entity2 instanceof Player) || 
             (entity1 instanceof Player && entity2 instanceof Ambulance || entity1 instanceof Ambulance && entity2 instanceof Player) || 
             (entity1 instanceof Player && entity2 instanceof CarDown || entity1 instanceof CarDown && entity2 instanceof Player)) {
-
+            console.log("collision car");
             smashed = true;
             onlog = false;
 
         }
         else if (entity1 instanceof Player && entity2 instanceof Log || entity1 instanceof Log && entity2 instanceof Player) {
+            console.log("collision log");
             smashed = false;
             onlog = true;
         }
@@ -581,7 +582,7 @@ Log.prototype.render = function (time, ctx) {
               // image
               this.spritesheet,
               // source rectangle
-              0, 0, this.width, this.height,
+              64, 64, this.width, this.height,
               // destination rectangle
               this.x, this.y, this.width, this.height
           );

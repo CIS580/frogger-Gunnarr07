@@ -60,7 +60,7 @@ Log.prototype.render = function (time, ctx) {
               // image
               this.spritesheet,
               // source rectangle
-              0, 0, this.width, this.height,
+              64, 64, this.width, this.height,
               // destination rectangle
               this.x, this.y, this.width, this.height
           );
